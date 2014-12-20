@@ -1,4 +1,4 @@
-package schedule;
+package schedule.classes;
 
 import java.util.ArrayList;
 
@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author Ian Christian
  *
  */
-public class Multisection extends Section {
+public class Multisection implements Enlistable {
 	private ArrayList<Section> sections;
 	
 	public Multisection(Section s)
@@ -31,5 +31,28 @@ public class Multisection extends Section {
 		}
 		
 		return 1 - notProbability;
+	}
+
+	@Override
+	public boolean doesContainCourse(Course course) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isEquivalentTo(Enlistable e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean doesConflictWith(Enlistable e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int numEnlistingSlots() {
+		return sections.size();
 	}
 }
