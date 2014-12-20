@@ -2,7 +2,7 @@ package schedule.timing;
 
 /**
  * This is 
- * @author Ian Christian
+ * @author Ian Christian Fernandez
  *
  */
 public class Timeslot {

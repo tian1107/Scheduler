@@ -3,7 +3,7 @@ package schedule.timing;
 /**
  * A 24-hour representation of time
  * higher bits: hour, lower bits: minutes
- * @author Ian Christian
+ * @author Ian Christian Fernandez
  *
  */
 public class Time {

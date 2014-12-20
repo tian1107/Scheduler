@@ -13,7 +13,11 @@ import org.eclipse.swt.widgets.Text;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-
+/**
+ * 
+ * @author Ian Christian Fernandez
+ *
+ */
 public class FirstApplication {
 
 	public static void main (String [] args)

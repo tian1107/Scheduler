@@ -1,5 +1,10 @@
 package schedule.classes;
 
+/**
+ * 
+ * @author Ian Christian Fernandez
+ *
+ */
 public interface Enlistable {
 	
 	/**

@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 import schedule.timing.Timeslot;
 
+/**
+ * 
+ * @author Ian Christian Fernandez
+ *
+ */
 public class Section implements Enlistable{
 	private ArrayList<Timeslot> times;
 	private Course course;

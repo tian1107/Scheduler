@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Sections of the same course that have the same timeslot, essentially they are the same
- * @author Ian Christian
+ * @author Ian Christian Fernandez
  *
  */
 public class Multisection implements Enlistable {
