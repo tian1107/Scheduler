@@ -2,6 +2,8 @@ package schedule.classes;
 
 import java.util.ArrayList;
 
+import org.jsoup.nodes.Element;
+
 import schedule.timing.Timeslot;
 
 /**
@@ -14,12 +16,32 @@ public class Section implements Enlistable{
 	private String course;
 	private String section;
 	private int id;
+	private float units;
 	private int demand;
 	private int available;
 	
-	public Section()
+	public Section(Element fromHtml)
 	{
+		times = new ArrayList<Timeslot>();
+		id = Integer.parseInt(fromHtml.child(0).html());
+		String [] sectionFull = fromHtml.child(1).html().split("(?<!\\G\\S+)\\s");
+		course = sectionFull[0];
+		section = sectionFull[1];
+		units = Float.parseFloat(fromHtml.child(2).html());
 		
+		String [] timeStrings = fromHtml.child(3).html().split("<br>")[0].split(";");
+		
+		for(int i = 0; i < timeStrings.length; i++)
+		{
+			times.add(new Timeslot(timeStrings[i].trim()));
+		}
+		
+		System.out.printf("%d %s(%.1f): %s\n", id, course, units, section);
+		
+		for(Timeslot time : times)
+		{
+			System.out.println(time);
+		}
 	}
 	
 	@Override
@@ -58,4 +80,10 @@ public class Section implements Enlistable{
 		// TODO Auto-generated method stub
 		return 1;
 	}
+	
+	@Override
+	public String toString() {
+		
+		return course + section;
+	};
 }
