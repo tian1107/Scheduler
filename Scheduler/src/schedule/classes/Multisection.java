@@ -34,7 +34,7 @@ public class Multisection implements Enlistable {
 	}
 
 	@Override
-	public boolean doesContainCourse(Course course) {
+	public boolean doesContainCourse(String name) {
 		// TODO Auto-generated method stub
 		return false;
 	}

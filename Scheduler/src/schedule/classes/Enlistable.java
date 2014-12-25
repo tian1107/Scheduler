@@ -12,7 +12,7 @@ public interface Enlistable {
 	 * @param course the course to check
 	 * @return if this class is counted as the course
 	 */
-	public boolean doesContainCourse(Course course);
+	public boolean doesContainCourse(String name);
 	
 	/**
 	 * 

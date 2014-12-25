@@ -11,7 +11,7 @@ import schedule.timing.Timeslot;
  */
 public class Section implements Enlistable{
 	private ArrayList<Timeslot> times;
-	private Course course;
+	private String course;
 	private String section;
 	private int id;
 	private int demand;
@@ -36,7 +36,7 @@ public class Section implements Enlistable{
 	}
 
 	@Override
-	public boolean doesContainCourse(Course course) {
+	public boolean doesContainCourse(String name) {
 		// TODO Auto-generated method stub
 		return false;
 	}
