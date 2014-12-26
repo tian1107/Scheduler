@@ -40,6 +40,7 @@ public class ClassList {
 					{
 						needsMerge = true;
 					}
+					
 					courseSections.add(newSection);
 				}
 			}
@@ -64,17 +65,34 @@ public class ClassList {
 				sections.addAll(retainList);
 			}
 			else
+			{
 				sections.addAll(courseSections);
-			
+			}
 		}
-		
-		for(Section finalSections: sections)
-			System.out.println(finalSections);
+	}
+	
+	public void removeUseless()
+	{
+		Iterator<Section> i = sections.iterator();
+		while(i.hasNext())
+		{
+			Section current = i.next();
+			if(current.getProbability() <= 0.0f)
+				i.remove();
+			else if(current.isDissolved())
+				i.remove();
+		}
 	}
 	
 	//Testing
 	public static void main(String [] args) throws Exception
 	{
 		ClassList list = new ClassList(new String[]{"EEE 35", "EEE 23", "eee 52"});
+		list.removeUseless();
+		
+		for(Section finalSections: list.sections)
+		{
+			System.out.println(finalSections);
+		}
 	}
 }
