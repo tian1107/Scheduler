@@ -30,6 +30,8 @@ public class Section implements Enlistable{
 		course = sectionFull[0];
 		section = sectionFull[1];
 		units = Float.parseFloat(fromHtml.child(2).html());
+		dissolve = false;
+		overbook = false;
 		
 		String [] timeStrings = fromHtml.child(3).html().split("<br>")[0].split(";");
 		
@@ -38,7 +40,7 @@ public class Section implements Enlistable{
 			times.add(new Timeslot(timeStrings[i].trim()));
 		}
 		
-		if(fromHtml.child(3).html().toLowerCase().contains("dissolve"))
+		if(fromHtml.child(3).text().toLowerCase().contains("dissolve"))
 			dissolve = true;
 		
 		String avString = fromHtml.child(5).select("strong").html();
@@ -52,8 +54,6 @@ public class Section implements Enlistable{
 			available = 0;
 		}
 		
-		dissolve = false;
-		overbook = false;
 		if(avString.contains("OVERBOOKED"))
 			overbook = true;
 		if(avString.contains("DISSOLVED"))
@@ -88,11 +88,11 @@ public class Section implements Enlistable{
 	
 	@Override
 	public float getProbability()
-	{
+	{			
 		if(demand < available)
 			return 1.0f;
 		else
-			return available / demand;
+			return available / (demand + 1);
 	}
 
 	@Override
