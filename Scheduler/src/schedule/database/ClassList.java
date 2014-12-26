@@ -75,6 +75,6 @@ public class ClassList {
 	//Testing
 	public static void main(String [] args) throws Exception
 	{
-		ClassList list = new ClassList(new String[]{"EEE 35", "EEE 23"});
+		ClassList list = new ClassList(new String[]{"EEE 35", "EEE 23", "eee 52"});
 	}
 }

@@ -19,6 +19,8 @@ public class Section implements Enlistable{
 	private float units;
 	private int demand;
 	private int available;
+	private boolean overbook;
+	private boolean dissolve;
 	
 	public Section(Element fromHtml)
 	{
@@ -36,6 +38,9 @@ public class Section implements Enlistable{
 			times.add(new Timeslot(timeStrings[i].trim()));
 		}
 		
+		if(fromHtml.child(3).html().toLowerCase().contains("dissolve"))
+			dissolve = true;
+		
 		String avString = fromHtml.child(5).select("strong").html();
 		
 		try
@@ -47,6 +52,14 @@ public class Section implements Enlistable{
 			available = 0;
 		}
 		
+		dissolve = false;
+		overbook = false;
+		if(avString.contains("OVERBOOKED"))
+			overbook = true;
+		if(avString.contains("DISSOLVED"))
+			dissolve = true;
+		
+		demand = 0;
 		if(!avString.contains("DISSOLVED"))
 			demand = Integer.parseInt(fromHtml.child(6).html());
 	}
@@ -108,7 +121,8 @@ public class Section implements Enlistable{
 	@Override
 	public String toString() {
 		
-		String value = String.format("%d %s(%.1f): %s, (%d)(%d)\n", id, course, units, section, available, demand);
+		String value = String.format("%d %s(%.1f): %s, (%d)(%d) %s %s\n", id, course, units, section, 
+				available, demand, overbook ? "Overbooked" : "", dissolve ? "Dissolved" : "");
 		
 		for(Timeslot time : times)
 		{
@@ -133,4 +147,14 @@ public class Section implements Enlistable{
 	public float getUnits() {
 		return units;
 	};
+	
+	public boolean isOverbooked()
+	{
+		return overbook;
+	}
+	
+	public boolean isDissolved()
+	{
+		return dissolve;
+	}
 }
