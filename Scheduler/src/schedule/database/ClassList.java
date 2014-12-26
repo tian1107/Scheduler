@@ -22,21 +22,59 @@ public class ClassList {
 		
 		for(String s : shortNames)
 		{
+			ArrayList<Section> courseSections = new ArrayList<Section>();
+			
 			Document x = Jsoup.parse(new File("Z:/scheduler/test/eee.html"), "utf-8", "");
 			Elements classes = x.select("#tbl_schedule tbody tr");
+			
+			boolean needsMerge = false;
 			
 			Iterator<Element> iter = classes.iterator();
 			while(iter.hasNext())
 			{
-				sections.add(new Section(iter.next()));
+				Section newSection = new Section(iter.next());
+				
+				if(newSection.doesContainCourse(s))
+				{
+					if(newSection.getUnits() <= 0.0f)
+					{
+						needsMerge = true;
+					}
+					courseSections.add(newSection);
+				}
 			}
 			
+			if (needsMerge)
+			{
+				ArrayList<Section> retainList = new ArrayList<Section>();
+				
+				for(Section subsection: courseSections)
+				{
+					for(Section mainSection: courseSections)
+					{
+						if(subsection.isSubsectionOf(mainSection))
+						{
+							subsection.mergeSection(mainSection);
+							retainList.add(subsection);
+							break;
+						}
+					}
+				}
+				
+				sections.addAll(retainList);
+			}
+			else
+				sections.addAll(courseSections);
+			
 		}
+		
+		for(Section finalSections: sections)
+			System.out.println(finalSections);
 	}
 	
 	//Testing
 	public static void main(String [] args) throws Exception
 	{
-		ClassList list = new ClassList(new String[]{"EEE 35"});
+		ClassList list = new ClassList(new String[]{"EEE 35", "EEE 23"});
 	}
 }

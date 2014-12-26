@@ -36,19 +36,44 @@ public class Section implements Enlistable{
 			times.add(new Timeslot(timeStrings[i].trim()));
 		}
 		
-		System.out.printf("%d %s(%.1f): %s\n", id, course, units, section);
+		String avString = fromHtml.child(5).select("strong").html();
 		
-		for(Timeslot time : times)
+		try
 		{
-			System.out.println(time);
+			available = Integer.parseInt(avString);
+		}
+		catch(NumberFormatException ex)
+		{
+			available = 0;
+		}
+		
+		if(!avString.contains("DISSOLVED"))
+			demand = Integer.parseInt(fromHtml.child(6).html());
+	}
+	
+	public void mergeSection(Section s)
+	{
+		if(isSubsectionOf(s))
+		{
+			this.times.addAll(s.times);
+			this.units += s.units;
 		}
 	}
 	
+	public boolean isSubsectionOf(Section s)
+	{
+		if(!s.course.equalsIgnoreCase(this.course))
+			return false;
+		if(s.section.equalsIgnoreCase(this.section))
+			return false;
+		
+		if(this.section.startsWith(s.section))
+			return true;
+		
+		return false;
+	}
+	
 	@Override
-	/**
-	 * Calculates the a priori probability that this section would be enlisted to the student  
-	 * @return the probability between 0.0f and 1.0f
-	 */
 	public float getProbability()
 	{
 		if(demand < available)
@@ -59,8 +84,7 @@ public class Section implements Enlistable{
 
 	@Override
 	public boolean doesContainCourse(String name) {
-		// TODO Auto-generated method stub
-		return false;
+		return course.equalsIgnoreCase(name);
 	}
 
 	@Override
@@ -84,6 +108,29 @@ public class Section implements Enlistable{
 	@Override
 	public String toString() {
 		
-		return course + section;
+		String value = String.format("%d %s(%.1f): %s, (%d)(%d)\n", id, course, units, section, available, demand);
+		
+		for(Timeslot time : times)
+		{
+			value += time.toString() + "\n";
+		}
+		
+		return value;
+	}
+
+	public ArrayList<Timeslot> getTimes() {
+		return times;
+	}
+
+	public String getCourse() {
+		return course;
+	}
+
+	public String getSection() {
+		return section;
+	}
+
+	public float getUnits() {
+		return units;
 	};
 }
