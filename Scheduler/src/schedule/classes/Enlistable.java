@@ -23,6 +23,13 @@ public interface Enlistable {
 	
 	/**
 	 * 
+	 * @param e
+	 * @return true if two classes are the very same, that is, equivalent, and same section
+	 */
+	public boolean isEqualTo(Enlistable e);
+	
+	/**
+	 * 
 	 * @return a priori probability that this will be received by the student
 	 */
 	public float getProbability();
