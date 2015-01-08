@@ -11,7 +11,7 @@ import schedule.timing.Timeslot;
  * @author Ian Christian Fernandez
  *
  */
-public class Section implements Enlistable{
+public class Section extends Enlistable{
 	private ArrayList<Timeslot> times;
 	private String course;
 	private String section;
@@ -156,5 +156,10 @@ public class Section implements Enlistable{
 	public boolean isDissolved()
 	{
 		return dissolve;
+	}
+
+	@Override
+	public boolean isEqualTo(Enlistable e) {
+		return e instanceof Section && ((Section)e).id == this.id;
 	}
 }
