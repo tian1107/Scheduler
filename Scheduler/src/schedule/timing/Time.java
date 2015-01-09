@@ -48,4 +48,12 @@ public class Time {
 	public String toString() {
 		return String.format("%02d:%02d", getHour(), getMinute());
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) return false;
+		if(obj == this) return true;
+		if(!(obj instanceof Time)) return false;
+		return this.time == ((Time) obj).time;
+	}
 }
