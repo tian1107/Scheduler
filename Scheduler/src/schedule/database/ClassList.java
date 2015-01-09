@@ -3,6 +3,7 @@ package schedule.database;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.jsoup.Jsoup;
@@ -32,7 +33,12 @@ public class ClassList {
 			Iterator<Element> iter = classes.iterator();
 			while(iter.hasNext())
 			{
-				Section newSection = new Section(iter.next());
+				Element current = iter.next();
+
+				Section newSection = new Section(current);
+				//TODO For multiple blocks, temp solution
+				int blocks = Integer.parseInt(current.child(0).attr("rowspan"));
+				while(--blocks > 0) iter.next();
 				
 				if(newSection.doesContainCourse(s))
 				{
@@ -82,6 +88,11 @@ public class ClassList {
 			else if(current.isDissolved())
 				i.remove();
 		}
+	}
+	
+	public Collection<Section> getList()
+	{
+		return sections;
 	}
 	
 	//Testing
