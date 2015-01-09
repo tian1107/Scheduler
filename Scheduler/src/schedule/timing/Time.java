@@ -6,7 +6,7 @@ package schedule.timing;
  * @author Ian Christian Fernandez
  *
  */
-public class Time {
+public class Time implements Comparable<Time> {
 	private int time;
 	
 	public Time(int time)
@@ -55,5 +55,15 @@ public class Time {
 		if(obj == this) return true;
 		if(!(obj instanceof Time)) return false;
 		return this.time == ((Time) obj).time;
+	}
+	
+	@Override
+	public int hashCode() {
+		return time;
+	}
+
+	@Override
+	public int compareTo(Time o) {
+		return this.time - o.time;	
 	}
 }
