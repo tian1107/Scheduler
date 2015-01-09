@@ -92,7 +92,7 @@ public class Section extends Enlistable{
 		if(demand < available)
 			return 1.0f;
 		else
-			return available / (demand + 1);
+			return (float) available / (demand + 1);
 	}
 
 	@Override
