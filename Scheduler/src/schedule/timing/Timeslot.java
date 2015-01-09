@@ -196,4 +196,16 @@ public class Timeslot {
 		
 		return value;
 	}
+
+	public byte getDays() {
+		return days;
+	}
+
+	public Time getFrom() {
+		return from;
+	}
+
+	public Time getTo() {
+		return to;
+	}
 }
