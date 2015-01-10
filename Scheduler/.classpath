@@ -8,5 +8,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="api/swt/swt.jar" sourcepath="api/swt/src.zip"/>
+	<classpathentry kind="lib" path="api/org.eclipse.core.commands_3.6.100.v20140528-1422.jar"/>
+	<classpathentry kind="lib" path="api/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
+	<classpathentry kind="lib" path="api/org.eclipse.jface_3.10.1.v20140813-1009.jar"/>
+	<classpathentry kind="lib" path="api/org.eclipse.osgi_3.10.1.v20140909-1633.jar"/>
+	<classpathentry kind="lib" path="api/org.eclipse.ui.workbench_3.106.1.v20140827-1737.jar"/>
+	<classpathentry kind="lib" path="api/agilegrid/org.agilemore.agilegrid_1.2.0.M20081212-0001.jar" sourcepath="api/agilegrid/org.agilemore.agilegrid.source_1.2.0.M20081212-0001.jar"/>
+	<classpathentry kind="lib" path="api/agilegrid/org.agilemore.agilegrid.samples_1.2.0.M20081212-0001.jar" sourcepath="api/agilegrid/org.agilemore.agilegrid.source_1.2.0.M20081212-0001.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
