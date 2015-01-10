@@ -90,7 +90,7 @@ public class ClassList {
 		}
 	}
 	
-	public Collection<Section> getList()
+	public ArrayList<Section> getList()
 	{
 		return sections;
 	}
