@@ -3,6 +3,7 @@ package gui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -31,8 +32,8 @@ public class ScheduleTable extends Composite {
 	
 	protected AgileGrid aTable;
 	
-	protected int [] rowHeights;
-	protected int [] columnWidths;
+	protected ArrayList<Integer> rowHeights;
+	protected ArrayList<Integer> columnWidths;
 	
 	public ScheduleTable(Composite parent, int style)
 	{
@@ -43,7 +44,7 @@ public class ScheduleTable extends Composite {
 		
 		setLayout(new FillLayout());
 		
-		aTable = new AgileGrid(this, SWT.MULTI | SWTX.AUTO_SCROLL | SWTX.COLUMN_SELECTION | SWT.NO_REDRAW_RESIZE);
+		aTable = new AgileGrid(this, SWT.MULTI | SWTX.AUTO_SCROLL | SWT.NO_REDRAW_RESIZE);
 		//aTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		aTable.setLayoutAdvisor(new ScheduleTableLayoutAdvisor(this));
 		aTable.setContentProvider(new ScheduleTableContentAdvisor(this));
@@ -78,9 +79,8 @@ public class ScheduleTable extends Composite {
 			last = current;
 		}
 		
-		rowHeights = new int[timeHeaders.size()];
-		Arrays.fill(rowHeights, 15);
-		columnWidths = new int[titles.length];
+		rowHeights = new ArrayList<Integer>(Collections.nCopies(timeHeaders.size(), 0));
+		columnWidths = new ArrayList<Integer>(Collections.nCopies(titles.length, 0));
 		GC gc = new GC(aTable);
 		
 		ArrayList<Time> aTimes = new ArrayList<Time>(times);
@@ -105,13 +105,13 @@ public class ScheduleTable extends Composite {
 						{
 							stringTable[q][t] += i.getCourse() + " " + i.getSection() + "\n";
 							Point dim = gc.textExtent(stringTable[q][t]);
-							if(dim.x > columnWidths[q])
+							if(dim.x > columnWidths.get(q))
 							{
-								columnWidths[q] = dim.x;
+								columnWidths.set(q, dim.x);
 							}
-							if(dim.y > rowHeights[t])
+							if(dim.y > rowHeights.get(t))
 							{
-								rowHeights[t] = dim.y;
+								rowHeights.set(t, dim.y);
 							}
 						}
 					}
@@ -165,14 +165,24 @@ class ScheduleTableLayoutAdvisor extends DefaultLayoutAdvisor
 	
 	@Override
 	public int getRowHeight(int row) {
-		return st.rowHeights[row];
+		return Math.max(18, st.rowHeights.get(row));
 	}
 	
 	@Override
 	public int getColumnWidth(int col) {
-		if(st.columnWidths[col] > 0)
-			return st.columnWidths[col] + 10;
-		return 0;
+		int properWidth =  (st.aTable.getClientArea().width - st.aTable.getLayoutAdvisor().getLeftHeaderWidth());
+		if(st.aTable.getVerticalBar().isVisible())
+			properWidth -= st.aTable.getVerticalBar().getSize().x;
+		
+		properWidth /= ScheduleTable.titles.length;
+		try
+		{
+			return Math.max(st.columnWidths.get(col) + 10, properWidth);
+		}
+		catch (NullPointerException e)
+		{
+			return properWidth;
+		}
 	}
 	
 	@Override
