@@ -206,7 +206,7 @@ class ScheduleTableContentAdvisor extends DefaultContentProvider
 	}
 	
 	@Override
-	public Object getContentAt(int row, int col) {
+	public Object doGetContentAt(int row, int col) {
 		return st.stringTable[col][row];
 	}
 }
