@@ -1,7 +1,6 @@
 package gui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -44,7 +43,7 @@ public class ScheduleTable extends Composite {
 		
 		setLayout(new FillLayout());
 		
-		aTable = new AgileGrid(this, SWT.MULTI | SWTX.AUTO_SCROLL | SWT.NO_REDRAW_RESIZE);
+		aTable = new AgileGrid(this, SWTX.AUTO_SCROLL | SWT.NO_REDRAW_RESIZE);
 		//aTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		aTable.setLayoutAdvisor(new ScheduleTableLayoutAdvisor(this));
 		aTable.setContentProvider(new ScheduleTableContentAdvisor(this));
@@ -165,7 +164,13 @@ class ScheduleTableLayoutAdvisor extends DefaultLayoutAdvisor
 	
 	@Override
 	public int getRowHeight(int row) {
-		return Math.max(18, st.rowHeights.get(row));
+		try{
+			return Math.max(18, st.rowHeights.get(row));
+		}
+		catch(ArrayIndexOutOfBoundsException e)
+		{
+			return 18;
+		}
 	}
 	
 	@Override
