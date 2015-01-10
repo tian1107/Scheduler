@@ -14,6 +14,9 @@ import org.eclipse.swt.widgets.Text;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import schedule.classes.Section;
+import schedule.database.ClassList;
+
 /**
  * 
  * @author Ian Christian Fernandez
@@ -25,6 +28,7 @@ public class FirstApplication {
 	{
 		Display display = new Display();
 		
+		// Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
 		Shell shell = new Shell(display);
 		
 		shell.setLayout(new GridLayout(1, false));
@@ -44,11 +48,23 @@ public class FirstApplication {
 		Text text = new Text(upper, SWT.NONE);
 		text.setText("This is the text in the text widget");
 		text.setLayoutData(new GridData(SWT.FILL, SWT.UP, true, false));
-		text.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
-		text.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
 		
-		Browser browser = new Browser(shell, SWT.NONE);
-		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		Browser browser = new Browser(shell, SWT.NONE);
+//		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		ScheduleTable table = new ScheduleTable(shell, SWT.NONE);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		ClassList list;
+		
+		try {
+			list = new ClassList(new String[]{"EEE 35", "EEE 23", "eee 52", "eee 51"});
+			list.removeUseless();
+			table.setSections(list.getList());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		
 		// set widgets size to their preferred size
 		text.pack();
@@ -56,14 +72,16 @@ public class FirstApplication {
 		
 		upper.pack();
 		
-		try {
-			//Document x = Jsoup.connect("file:///Z:/scheduler/test/eee.html").get();
-			Document x = Jsoup.parse(new File("Z:/scheduler/test/eee.html"), "utf-8", "");			
-			browser.setText("<table>" + x.select("#tbl_schedule tbody tr").toString() + "</table>");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		table.pack();
+		
+//		try {
+//			//Document x = Jsoup.connect("file:///Z:/scheduler/test/eee.html").get();
+//			Document x = Jsoup.parse(new File("Z:/scheduler/test/eee.html"), "utf-8", "");			
+//			browser.setText("<table>" + x.select("#tbl_schedule tbody tr").toString() + "</table>");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		shell.open();
 		while(!shell.isDisposed())
