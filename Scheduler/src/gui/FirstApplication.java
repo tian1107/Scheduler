@@ -1,9 +1,7 @@
 package gui;
-import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -11,10 +9,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
-import schedule.classes.Section;
 import schedule.database.ClassList;
 
 /**
@@ -36,6 +31,13 @@ public class FirstApplication {
 		
 		shell.setText("Scheduler");
 		
+		Shell shell2 = new Shell(display);
+		
+		shell2.setLayout(new GridLayout(1, false));
+		shell2.setSize(800, 600);
+		
+		shell2.setText("Scheduler");
+		
 		// Shell can be used as container
 		Composite upper = new Composite(shell, SWT.NONE);
 		upper.setLayout(new GridLayout(2, false));
@@ -54,24 +56,24 @@ public class FirstApplication {
 		
 		ScheduleTable table = new ScheduleTable(shell, SWT.NONE);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		ClassListTable clTable = new ClassListTable(shell2, SWT.NONE);
+		clTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
 		ClassList list;
 		
 		try {
 			list = new ClassList(new String[]{"EEE 35", "EEE 23", "eee 52", "eee 51"});
 			list.removeUseless();
 			table.setSections(list.getList());
+			clTable.setList(list);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-		
-		// set widgets size to their preferred size
-		text.pack();
-		label.pack(); 
-		
+		clTable.pack();
 		upper.pack();
-		
 		table.pack();
 		
 //		try {
@@ -84,12 +86,18 @@ public class FirstApplication {
 //		}
 		
 		shell.open();
-		while(!shell.isDisposed())
+		shell2.open();
+		//shell.setVisible(false);
+		while((!shell.isDisposed() && shell.isVisible()) || (!shell2.isDisposed() && shell2.isVisible()))
 		{
 			if(!display.readAndDispatch())
 				display.sleep();
 		}
 		
+		if(!shell.isDisposed())
+			shell.dispose();
+		if(!shell2.isDisposed())
+			shell2.dispose();
 		display.dispose();
 	}
 }
