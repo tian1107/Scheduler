@@ -140,7 +140,7 @@ public class Timeslot {
 			}
 			else if(state == 2)
 			{
-				if(current == 'p')
+				if(current == 'p' && from.getHour() < 12)
 					from.setHour(from.getHour() + 12);
 				else if(current == '-')
 					state = 10;
@@ -175,8 +175,9 @@ public class Timeslot {
 			{
 				if(current == 'p')
 				{
-					to.setHour(to.getHour() + 12);
-					if(sameMeridiem)
+					if(to.getHour() < 12)
+						to.setHour(to.getHour() + 12);
+					if(sameMeridiem && from.getHour() < 12)
 						from.setHour(from.getHour() + 12);
 				}
 			}
