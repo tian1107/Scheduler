@@ -1,6 +1,9 @@
 package gui;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.agilemore.agilegrid.AgileGrid;
 import org.agilemore.agilegrid.ColumnSortComparator;
@@ -9,9 +12,17 @@ import org.agilemore.agilegrid.DefaultCompositorStrategy;
 import org.agilemore.agilegrid.DefaultContentProvider;
 import org.agilemore.agilegrid.DefaultLayoutAdvisor;
 import org.agilemore.agilegrid.ICompositorStrategy;
+import org.agilemore.agilegrid.IContentProvider;
 import org.agilemore.agilegrid.ILayoutAdvisor;
 import org.agilemore.agilegrid.SWTX;
+import org.agilemore.agilegrid.samples.ScalableColumnContentProvider;
 import org.agilemore.agilegrid.samples.SortableCellRendererProvider;
+import org.agilemore.agilegrid.samples.SortableContentProvider;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
@@ -21,6 +32,7 @@ import schedule.database.ClassList;
 public class ClassListTable extends Composite{
 	
 	public static final String [] titles = {"Subject", "Section", "Time", "Remarks", "Probability"};
+	protected int [] columnWidths;
 	
 	protected ClassList list;
 	
@@ -28,6 +40,7 @@ public class ClassListTable extends Composite{
 	
 	public ClassListTable(Composite parent, int style) {
 		super(parent, style);
+		columnWidths = new int[titles.length];
 		
 		try {
 			list = new ClassList(new String[]{});
@@ -38,11 +51,10 @@ public class ClassListTable extends Composite{
 		
 		setLayout(new FillLayout());
 		table = new AgileGrid(this, SWTX.AUTO_SCROLL | SWTX.ROW_SELECTION);
-		table.setContentProvider(new ClassListTableContentProvider(this));
+		table.setContentProvider(new ScalableColumnContentProvider());
 		
 		ILayoutAdvisor layoutAdvisor = new ClassListTableLayoutAdvisor(this);
-		final ICompositorStrategy compositorStrategy = new DefaultCompositorStrategy(
-				layoutAdvisor);
+		final ICompositorStrategy compositorStrategy = new DefaultCompositorStrategy(layoutAdvisor);
 		layoutAdvisor.setCompositorStrategy(compositorStrategy);
 		
 		table.setLayoutAdvisor(layoutAdvisor);
@@ -65,8 +77,21 @@ public class ClassListTable extends Composite{
 	
 	public void setList(ClassList list) {
 		this.list = list;
+		
+		IContentProvider provider = table.getContentProvider();
+		
+		int i = 0;
+		for(Section section : list.getList())
+		{
+			provider.setContentAt(i, 0, section.getCourse());
+			provider.setContentAt(i, 1, section.getSection());
+			provider.setContentAt(i, 2, section.getTimeString());
+			provider.setContentAt(i, 4, String.format("%.3f", section.getProbability() * 100));
+			i++;
+		}
+		
+		AgileGridUtils.resizeAllColumnsOptimal(table);
 	}
-
 }
 
 class ClassListTableLayoutAdvisor extends DefaultLayoutAdvisor
@@ -109,44 +134,7 @@ class ClassListTableLayoutAdvisor extends DefaultLayoutAdvisor
 	}
 	
 	@Override
-	public int getColumnWidth(int col) {
-		int properWidth =  (clt.table.getClientArea().width);
-		if(clt.table.getVerticalBar().isVisible())
-			properWidth -= clt.table.getVerticalBar().getSize().x;
-		
-		properWidth /= ClassListTable.titles.length;
-		return properWidth;
-	}
-	
-	@Override
 	public String getTooltip(int row, int col) {
 		return col == 0 ? "Conflicts with ..." : null;
-	}
-}
-
-class ClassListTableContentProvider extends DefaultContentProvider
-{
-	protected ClassListTable clt;
-	
-	public ClassListTableContentProvider(ClassListTable clt) {
-		this.clt = clt;
-	}
-	
-	@Override
-	public Object doGetContentAt(int row, int col) {
-		Section select = clt.list.getList().get(row);
-		switch(col)
-		{
-		case 0:
-			return select.getCourse();
-		case 1:
-			return select.getSection();
-		case 2:
-			return select.getTimeString();
-		case 4:
-			return String.format("%.3f", select.getProbability() * 100);
-		}
-		
-		return "";
 	}
 }
