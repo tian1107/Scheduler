@@ -2,12 +2,17 @@ package gui;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -41,23 +46,26 @@ public class FirstApplication {
 		
 		if(display.isDisposed()) return;
 		
-		shellList = new Shell(display);
+		shellList = new Shell(display, SWT.SHELL_TRIM | (SWT.RESIZE));
 		
 		shellList.setLayout(new GridLayout(3, false));
-		shellList.setSize(800, 600);
 		
 		shellList.setText("Scheduler");
 		
 		clTable = new ClassListTable(shellList, SWT.NONE);
-		clTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		GridData clTableData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		clTableData.minimumHeight = 300;
+		clTableData.widthHint = 300;
+		clTable.setLayoutData(clTableData);
 		
 		Composite control = new Composite(shellList, SWT.NONE);
 		control.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true));
 		control.setLayout(new GridLayout(1, false));
 		
-		Button addAll = new Button(control, SWT.NONE);
-		addAll.setText(">>");
-		addAll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		Button moveUp = new Button(control, SWT.NONE);
+		moveUp.setText("ª");
+		moveUp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
 		Button add = new Button(control, SWT.NONE);
 		add.setText(">");
@@ -67,11 +75,22 @@ public class FirstApplication {
 		remove.setText("<");
 		remove.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		
+		Button moveDown = new Button(control, SWT.NONE);
+		moveDown.setText("«");
+		moveDown.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		
 		Button removeAll = new Button(control, SWT.NONE);
 		removeAll.setText("<<");
 		removeAll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		
+
 		control.pack();
+		
+		List list = new List(shellList, SWT.BORDER);
+		GridData listData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		listData.widthHint = 300;
+		list.setLayoutData(listData);
+		
+		shellList.pack();
 	}
 	
 	private void createShellSched()
@@ -109,7 +128,7 @@ public class FirstApplication {
 	{
 		shellSched.open();
 		shellList.open();
-		//shellSched.setVisible(false);
+		shellSched.setVisible(false);
 		while((!shellSched.isDisposed() && shellSched.isVisible()) || (!shellList.isDisposed() && shellList.isVisible()))
 		{
 			if(!display.readAndDispatch())
