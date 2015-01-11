@@ -4,6 +4,7 @@ import java.io.IOException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -18,28 +19,71 @@ import schedule.database.ClassList;
  *
  */
 public class FirstApplication {
+	
+	protected Display display;
+	
+	protected Shell shellSched;
+	protected Shell shellList;
 
-	public static void main (String [] args)
+	protected ScheduleTable scTable;
+	protected ClassListTable clTable;
+	
+	public FirstApplication()
 	{
-		Display display = new Display();
+		display = new Display();
+		createShellList();
+		createShellSched();
+	}
+	
+	private void createShellList()
+	{
+		if(display == null) return;
 		
-		// Shell shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
-		Shell shell = new Shell(display);
+		if(display.isDisposed()) return;
 		
-		shell.setLayout(new GridLayout(1, false));
-		shell.setSize(800, 600);
+		shellList = new Shell(display);
 		
-		shell.setText("Scheduler");
+		shellList.setLayout(new GridLayout(3, false));
+		shellList.setSize(800, 600);
 		
-		Shell shell2 = new Shell(display);
+		shellList.setText("Scheduler");
 		
-		shell2.setLayout(new GridLayout(1, false));
-		shell2.setSize(800, 600);
+		clTable = new ClassListTable(shellList, SWT.NONE);
+		clTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		shell2.setText("Scheduler");
+		Composite control = new Composite(shellList, SWT.NONE);
+		control.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true));
+		control.setLayout(new GridLayout(1, false));
 		
-		// Shell can be used as container
-		Composite upper = new Composite(shell, SWT.NONE);
+		Button addAll = new Button(control, SWT.NONE);
+		addAll.setText(">>");
+		addAll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		
+		Button add = new Button(control, SWT.NONE);
+		add.setText(">");
+		add.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		
+		Button remove = new Button(control, SWT.NONE);
+		remove.setText("<");
+		remove.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		
+		Button removeAll = new Button(control, SWT.NONE);
+		removeAll.setText("<<");
+		removeAll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		
+		control.pack();
+	}
+	
+	private void createShellSched()
+	{
+		shellSched = new Shell(display);
+		
+		shellSched.setLayout(new GridLayout(1, false));
+		shellSched.setSize(800, 600);
+		
+		shellSched.setText("Scheduler");
+		
+		Composite upper = new Composite(shellSched, SWT.NONE);
 		upper.setLayout(new GridLayout(2, false));
 		upper.setLayoutData(new GridData(SWT.FILL, SWT.UP, true, false));
 		
@@ -50,54 +94,50 @@ public class FirstApplication {
 		Text text = new Text(upper, SWT.NONE);
 		text.setText("This is the text in the text widget");
 		text.setLayoutData(new GridData(SWT.FILL, SWT.UP, true, false));
-		
-//		Browser browser = new Browser(shell, SWT.NONE);
-//		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
-		ScheduleTable table = new ScheduleTable(shell, SWT.NONE);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
-		ClassListTable clTable = new ClassListTable(shell2, SWT.NONE);
-		clTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
-		ClassList list;
-		
-		try {
-			list = new ClassList(new String[]{"EEE 35", "EEE 23", "eee 52", "eee 51"});
-			list.removeUseless();
-			table.setSections(list.getList());
-			clTable.setList(list);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		clTable.pack();
-		upper.pack();
-		table.pack();
-		
-//		try {
-//			//Document x = Jsoup.connect("file:///Z:/scheduler/test/eee.html").get();
-//			Document x = Jsoup.parse(new File("Z:/scheduler/test/eee.html"), "utf-8", "");			
-//			browser.setText("<table>" + x.select("#tbl_schedule tbody tr").toString() + "</table>");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		shell.open();
-		shell2.open();
-		//shell.setVisible(false);
-		while((!shell.isDisposed() && shell.isVisible()) || (!shell2.isDisposed() && shell2.isVisible()))
+				
+		scTable = new ScheduleTable(shellSched, SWT.NONE);
+		scTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	}
+	
+	public void setClassList(ClassList list)
+	{
+		scTable.setSections(list.getList());
+		clTable.setList(list);
+	}
+	
+	public void start()
+	{
+		shellSched.open();
+		shellList.open();
+		//shellSched.setVisible(false);
+		while((!shellSched.isDisposed() && shellSched.isVisible()) || (!shellList.isDisposed() && shellList.isVisible()))
 		{
 			if(!display.readAndDispatch())
 				display.sleep();
 		}
 		
-		if(!shell.isDisposed())
-			shell.dispose();
-		if(!shell2.isDisposed())
-			shell2.dispose();
+		if(!shellSched.isDisposed())
+			shellSched.dispose();
+		if(!shellList.isDisposed())
+			shellList.dispose();
 		display.dispose();
+	}
+
+	public static void main (String [] args)
+	{
+		FirstApplication fa = new FirstApplication();
+		
+		
+		ClassList list;
+		try {
+			list = new ClassList(new String[]{"EEE 35", "EEE 23", "eee 52", "eee 51"});
+			list.removeUseless();
+			fa.setClassList(list);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		fa.start();
 	}
 }
