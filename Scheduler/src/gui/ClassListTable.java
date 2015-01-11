@@ -1,15 +1,11 @@
 package gui;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.agilemore.agilegrid.AgileGrid;
 import org.agilemore.agilegrid.ColumnSortComparator;
 import org.agilemore.agilegrid.ColumnSortOnClick;
 import org.agilemore.agilegrid.DefaultCompositorStrategy;
-import org.agilemore.agilegrid.DefaultContentProvider;
 import org.agilemore.agilegrid.DefaultLayoutAdvisor;
 import org.agilemore.agilegrid.ICompositorStrategy;
 import org.agilemore.agilegrid.IContentProvider;
@@ -17,12 +13,6 @@ import org.agilemore.agilegrid.ILayoutAdvisor;
 import org.agilemore.agilegrid.SWTX;
 import org.agilemore.agilegrid.samples.ScalableColumnContentProvider;
 import org.agilemore.agilegrid.samples.SortableCellRendererProvider;
-import org.agilemore.agilegrid.samples.SortableContentProvider;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
