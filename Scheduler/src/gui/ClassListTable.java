@@ -13,6 +13,7 @@ import org.agilemore.agilegrid.ILayoutAdvisor;
 import org.agilemore.agilegrid.SWTX;
 import org.agilemore.agilegrid.samples.ScalableColumnContentProvider;
 import org.agilemore.agilegrid.samples.SortableCellRendererProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
@@ -40,7 +41,7 @@ public class ClassListTable extends Composite{
 		}
 		
 		setLayout(new FillLayout());
-		table = new AgileGrid(this, SWTX.AUTO_SCROLL | SWTX.ROW_SELECTION);
+		table = new AgileGrid(this, SWT.V_SCROLL | SWT.H_SCROLL | SWTX.ROW_SELECTION | SWT.NO_REDRAW_RESIZE);
 		table.setContentProvider(new ScalableColumnContentProvider());
 		
 		ILayoutAdvisor layoutAdvisor = new ClassListTableLayoutAdvisor(this);
