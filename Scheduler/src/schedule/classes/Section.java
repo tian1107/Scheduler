@@ -147,6 +147,10 @@ public class Section extends Enlistable{
 	public String getCourse() {
 		return course;
 	}
+	
+	public int getId() {
+		return id;
+	}
 
 	public String getSection() {
 		return section;
