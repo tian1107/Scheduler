@@ -142,7 +142,7 @@ class ClassListTableContentProvider extends DefaultContentProvider
 		case 1:
 			return select.getSection();
 		case 2:
-			return "blah";
+			return select.getTimeString();
 		case 4:
 			return String.format("%.3f", select.getProbability() * 100);
 		}

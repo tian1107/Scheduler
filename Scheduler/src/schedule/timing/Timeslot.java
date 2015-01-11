@@ -16,6 +16,7 @@ public class Timeslot {
 	public static final byte SATURDAY = 1;
 	
 	public static final String [] dayNames = {"Unknown", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+	public static final String [] dayShortNames = {"Err", "Su", "M", "T", "W", "Th", "F", "S"};
 	
 	private byte days;	//most signficant bit not used; Su M T W Th F S order
 	private Time from;
@@ -194,6 +195,20 @@ public class Timeslot {
 		}
 		
 		value += from.toString() + " to " + to.toString();
+		
+		return value;
+	}
+	
+	public String toShortString()
+	{
+		String value = "";
+		for(int i = 7; i >= 0; i--)
+		{
+			if((days & 1 << i) != 0)
+				value += dayShortNames[7 - i];
+		}
+		
+		value += " " + from.toString() + "-" + to.toString();
 		
 		return value;
 	}

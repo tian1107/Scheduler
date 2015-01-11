@@ -131,6 +131,14 @@ public class Section extends Enlistable{
 		
 		return value;
 	}
+	
+	public String getTimeString()
+	{
+		String value = "";
+		for(Timeslot time : times)
+			value += time.toShortString() + "; ";
+		return value;
+	}
 
 	public ArrayList<Timeslot> getTimes() {
 		return times;
