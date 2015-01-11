@@ -208,7 +208,7 @@ public class Timeslot {
 				value += dayShortNames[7 - i];
 		}
 		
-		value += " " + from.toString() + "-" + to.toString();
+		value += " " + from.to12HourString() + "-" + to.to12HourString();
 		
 		return value;
 	}

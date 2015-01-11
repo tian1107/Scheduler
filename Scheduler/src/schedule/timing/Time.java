@@ -49,6 +49,11 @@ public class Time implements Comparable<Time> {
 		return String.format("%02d:%02d", getHour(), getMinute());
 	}
 	
+	public String to12HourString()
+	{
+		return String.format("%d:%02d%s", getHour() % 12 != 0 ? getHour() % 12 : 12, getMinute(), getHour() / 12 > 0 ? "pm" : "am");
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == null) return false;
