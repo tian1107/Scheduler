@@ -11,7 +11,6 @@ import org.agilemore.agilegrid.AgileGrid;
 import org.agilemore.agilegrid.DefaultContentProvider;
 import org.agilemore.agilegrid.DefaultLayoutAdvisor;
 import org.agilemore.agilegrid.SWTX;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -43,8 +42,7 @@ public class ScheduleTable extends Composite {
 		
 		setLayout(new FillLayout());
 		
-		aTable = new AgileGrid(this, SWTX.AUTO_SCROLL | SWT.NO_REDRAW_RESIZE);
-		//aTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		aTable = new AgileGrid(this, SWTX.AUTO_SCROLL);
 		aTable.setLayoutAdvisor(new ScheduleTableLayoutAdvisor(this));
 		aTable.setContentProvider(new ScheduleTableContentAdvisor(this));
 		
