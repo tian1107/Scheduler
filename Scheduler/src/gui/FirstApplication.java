@@ -1,5 +1,7 @@
 package gui;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import org.agilemore.agilegrid.Cell;
 import org.agilemore.agilegrid.ISelectionChangedListener;
@@ -46,12 +48,14 @@ public class FirstApplication {
 	private Text fullLabel;
 
 	private ClassList cList;
+	private HashMap<String, Float> subProb;
 	
 	public FirstApplication()
 	{
 		display = new Display();
 		createShellList();
 		createShellSched();
+		subProb = new HashMap<String, Float>();
 	}
 	
 	private void createShellList()
@@ -111,6 +115,7 @@ public class FirstApplication {
 						list.setItem(select - 1, lower);
 						list.setItem(select, upper);
 						list.setSelection(select - 1);
+						updateSubjectProbabilities();
 					}
 				}
 			}
@@ -131,7 +136,10 @@ public class FirstApplication {
 						String toAdd = (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Subject.getIndex())
 								+ " " + (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Section.getIndex());
 						if (list.indexOf(toAdd) < 0)
+						{
 							list.add(toAdd);
+							updateSubjectProbabilities();
+						}
 					}
 				}
 			}
@@ -147,6 +155,7 @@ public class FirstApplication {
 				if(e.button == 1 && list.getSelectionCount() > 0)
 				{
 					list.remove(list.getSelectionIndex());
+					updateSubjectProbabilities();
 				}
 			}
 		});
@@ -168,6 +177,7 @@ public class FirstApplication {
 						list.setItem(select, lower);
 						list.setItem(select + 1, upper);
 						list.setSelection(select + 1);
+						updateSubjectProbabilities();
 					}
 				}
 			}
@@ -183,6 +193,7 @@ public class FirstApplication {
 				if(e.button == 1)
 				{
 					list.removeAll();
+					updateSubjectProbabilities();
 				}
 			}
 		});
@@ -274,6 +285,54 @@ public class FirstApplication {
 				
 		scTable = new ScheduleTable(shellSched, SWT.NONE);
 		scTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	}
+	
+	private void updateSubjectProbabilities()
+	{
+		String secText = "";
+		subProb.clear();
+		
+		HashSet<String> subjects = new HashSet<String>();
+		for(int index = 0; index < list.getItemCount(); index++)
+		{
+			String title = list.getItem(index);
+			Section s = cList.getSection(title);
+			subjects.add(s.getCourse());
+			float posteriori = 1.0f;
+			for(int c = 0; c < index; c++)
+			{
+				String cTitle = list.getItem(c);
+				Section con = cList.getSection(cTitle);
+				
+				if(con.doesConflictWith(s))
+				{
+					posteriori *= 1 - con.getProbability();
+				}
+			}
+			posteriori *= s.getProbability();
+			secText += String.format("%s: %.3f%%\n", title, posteriori * 100);
+			if(subProb.containsKey(s.getCourse()))
+			{
+				subProb.put(s.getCourse(), subProb.get(s.getCourse()) + posteriori);
+			}
+			else
+			{
+				subProb.put(s.getCourse(), posteriori);
+			}
+		}
+		
+		float totalProb = 1.0f;
+		String text = "";
+		for(String title : subjects)
+		{
+			text += String.format("%s: %.3f%%\n", title, subProb.get(title) * 100);
+			totalProb *= subProb.get(title);
+		}
+		
+		text = String.format("All: %.3f%%\n", totalProb * 100) + text;
+		
+		indivLabel.setText(secText);
+		fullLabel.setText(text);
 	}
 	
 	public void setClassList(ClassList list)
