@@ -1,7 +1,12 @@
 package gui;
 import java.io.IOException;
 
+import org.agilemore.agilegrid.Cell;
+import org.agilemore.agilegrid.CellRow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -32,6 +37,7 @@ public class FirstApplication {
 
 	protected ScheduleTable scTable;
 	protected ClassListTable clTable;
+	protected List list;
 	
 	public FirstApplication()
 	{
@@ -66,26 +72,99 @@ public class FirstApplication {
 		Button moveUp = new Button(control, SWT.NONE);
 		moveUp.setText("ª");
 		moveUp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		moveUp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if(e.button == 1 && list.getSelectionCount() > 0)
+				{
+					int select = list.getSelectionIndex();
+					if(select > 0)
+					{
+						String upper = list.getItem(select - 1);
+						String lower = list.getItem(select);
+						list.setItem(select - 1, lower);
+						list.setItem(select, upper);
+						list.setSelection(select - 1);
+					}
+				}
+			}
+		});
+		moveUp.setToolTipText("Move Item Up");
 		
 		Button add = new Button(control, SWT.NONE);
 		add.setText(">");
 		add.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		add.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if(e.button == 1)
+				{
+					Cell selected = clTable.table.getCellSelection()[0];
+					if(selected.row > -1 && selected.row < clTable.table.getLayoutAdvisor().getRowCount())
+					{
+						String toAdd = (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Subject.getIndex())
+								+ " " + (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Section.getIndex());
+						if (list.indexOf(toAdd) < 0)
+							list.add(toAdd);
+					}
+				}
+			}
+		});
+		add.setToolTipText("Add to List");
 		
 		Button remove = new Button(control, SWT.NONE);
 		remove.setText("<");
 		remove.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		remove.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if(e.button == 1 && list.getSelectionCount() > 0)
+				{
+					list.remove(list.getSelectionIndex());
+				}
+			}
+		});
+		remove.setToolTipText("Remove from List");
 		
 		Button moveDown = new Button(control, SWT.NONE);
 		moveDown.setText("«");
 		moveDown.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		moveDown.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if(e.button == 1 && list.getSelectionCount() > 0)
+				{
+					int select = list.getSelectionIndex();
+					if(select < list.getItemCount() - 1)
+					{
+						String upper = list.getItem(select);
+						String lower = list.getItem(select + 1);
+						list.setItem(select, lower);
+						list.setItem(select + 1, upper);
+						list.setSelection(select + 1);
+					}
+				}
+			}
+		});
+		moveDown.setToolTipText("Move Item Down");
 		
 		Button removeAll = new Button(control, SWT.NONE);
 		removeAll.setText("<<");
 		removeAll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		removeAll.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if(e.button == 1)
+				{
+					list.removeAll();
+				}
+			}
+		});
+		removeAll.setToolTipText("Remove All");
 
 		control.pack();
 		
-		List list = new List(shellList, SWT.BORDER);
+		list = new List(shellList, SWT.BORDER);
 		GridData listData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		listData.widthHint = 300;
 		list.setLayoutData(listData);
@@ -128,6 +207,7 @@ public class FirstApplication {
 	{
 		shellSched.open();
 		shellList.open();
+		shellList.setMaximized(true);
 		shellSched.setVisible(false);
 		while((!shellSched.isDisposed() && shellSched.isVisible()) || (!shellList.isDisposed() && shellList.isVisible()))
 		{
