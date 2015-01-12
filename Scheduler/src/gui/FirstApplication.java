@@ -7,6 +7,7 @@ import org.agilemore.agilegrid.Cell;
 import org.agilemore.agilegrid.ISelectionChangedListener;
 import org.agilemore.agilegrid.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -20,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -41,6 +43,7 @@ public class FirstApplication {
 	protected ScheduleTable scTable;
 	protected ClassListTable clTable;
 	protected List list;
+	protected ClassListSelect listSelect;
 
 	private Text conflictLabel;
 	private Text conflictLabel2;
@@ -258,6 +261,30 @@ public class FirstApplication {
 		fullLabel = new Text(full, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
 		fullLabel.setText("\n\n\n\n");
 		
+		listSelect = new ClassListSelect(shellList, SWT.NONE);
+		
+		Button subjectSelect = new Button(calc, SWT.NONE);
+		subjectSelect.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		subjectSelect.setText("Edit Subject List");
+		subjectSelect.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if(e.button == 1)
+				{
+					try {
+						ClassList lst = new ClassList(listSelect.open());
+						System.out.println(lst.getList().size());
+						setClassList(lst);
+					} catch (Exception e1) {
+						MessageBox box = new MessageBox(shellList, SWT.ERROR);
+						box.setText("Error");
+						box.setMessage(e1.getMessage());
+						box.open();
+					}
+				}
+			}
+		});
+		
 		shellList.pack();
 		
 		updateSubjectProbabilities();
@@ -364,7 +391,7 @@ public class FirstApplication {
 		shellSched.open();
 		shellList.open();
 		shellList.setMaximized(true);
-		shellSched.dispose();
+		shellSched.setVisible(false);
 		while((!shellSched.isDisposed() && shellSched.isVisible()) || (!shellList.isDisposed() && shellList.isVisible()))
 		{
 			if(!display.readAndDispatch())
@@ -381,18 +408,6 @@ public class FirstApplication {
 	public static void main (String [] args)
 	{
 		FirstApplication fa = new FirstApplication();
-		
-		
-		ClassList list;
-		try {
-			list = new ClassList(new String[]{"EEE 23", "eee 52", "eee 35"});
-			list.removeUseless();
-			fa.setClassList(list);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
 		fa.start();
 	}
 }
