@@ -163,9 +163,4 @@ class ClassListTableLayoutAdvisor extends DefaultLayoutAdvisor
 	public boolean isRowResizable(int row) {
 		return false;
 	}
-	
-	@Override
-	public String getTooltip(int row, int col) {
-		return col == ClassListTable.Columns.Section.getIndex() ? "Conflicts with ..." : null;
-	}
 }
