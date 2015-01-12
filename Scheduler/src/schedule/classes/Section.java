@@ -107,12 +107,6 @@ public class Section extends Enlistable{
 	}
 
 	@Override
-	public boolean doesConflictWith(Enlistable e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public int numEnlistingSlots() {
 		// TODO Auto-generated method stub
 		return 1;
@@ -140,6 +134,7 @@ public class Section extends Enlistable{
 		return value;
 	}
 
+	@Override
 	public ArrayList<Timeslot> getTimes() {
 		return times;
 	}
@@ -173,5 +168,10 @@ public class Section extends Enlistable{
 	@Override
 	public boolean isEqualTo(Enlistable e) {
 		return e instanceof Section && ((Section)e).id == this.id;
+	}
+
+	@Override
+	public String[] getCourses() {
+		return new String[]{course};
 	}
 }

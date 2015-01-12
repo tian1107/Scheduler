@@ -1,5 +1,9 @@
 package schedule.classes;
 
+import java.util.Collection;
+
+import schedule.timing.Timeslot;
+
 /**
  * 
  * @author Ian Christian Fernandez
@@ -39,13 +43,40 @@ public abstract class Enlistable {
 	 * @param e
 	 * @return
 	 */
-	public abstract boolean doesConflictWith(Enlistable e);
+	public boolean doesConflictWith(Enlistable e)
+	{
+		//Check if times are conflicting
+		for(Timeslot s : e.getTimes())
+		{
+			for(Timeslot t: getTimes())
+			{
+				if(s.doesIntersectWith(t))
+					return true;
+			}
+		}
+		
+		//Check if subjects are the same
+		for(String s : e.getCourses())
+		{
+			for(String t: getCourses())
+			{
+				if(s.equalsIgnoreCase(t))
+					return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	/**
 	 * 
 	 * @return The number of enlistment slots this enlistable takes.
 	 */
 	public abstract int numEnlistingSlots();
+	
+	public abstract Collection<Timeslot> getTimes();
+	
+	public abstract String[] getCourses();
 	
 	@Override
 	public boolean equals(Object obj) {
