@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.jsoup.helper.StringUtil;
 
 import schedule.classes.Section;
 import schedule.database.ClassList;
@@ -49,12 +48,10 @@ public class FirstApplication {
 	private Text fullLabel;
 
 	private ClassList cList;
-	private HashMap<String, Float> subProb;
 	
 	public FirstApplication()
 	{
 		display = new Display();
-		subProb = new HashMap<String, Float>();
 		
 		createShellList();
 		createShellSched();
@@ -294,8 +291,8 @@ public class FirstApplication {
 	private void updateSubjectProbabilities()
 	{
 		String secText = "";
-		subProb.clear();
-		
+
+		HashMap<String, Float> subProb = new HashMap<String, Float>();
 		HashSet<String> subjects = new HashSet<String>();
 		for(int index = 0; index < list.getItemCount(); index++)
 		{
