@@ -1,5 +1,4 @@
 package gui;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -7,7 +6,6 @@ import org.agilemore.agilegrid.Cell;
 import org.agilemore.agilegrid.ISelectionChangedListener;
 import org.agilemore.agilegrid.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -86,14 +84,7 @@ public class FirstApplication {
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				for(Cell cell : event.getNewSelections())
-				{
-					String subject = (String) clTable.table.getContentAt(cell.row, ClassListTable.Columns.Subject.getIndex());
-					String section = (String) clTable.table.getContentAt(cell.row, ClassListTable.Columns.Section.getIndex());
-					
-					Section selected = cList.getSection(subject, section);
-					conflictLabel.setText(selected.toString());
-				}
+				updateConflictsLeft();
 			}
 		});
 		
@@ -213,8 +204,7 @@ public class FirstApplication {
 			public void widgetSelected(SelectionEvent e) {
 				if(list.getSelectionCount() > 0)
 				{
-					Section section = cList.getSection(list.getSelection()[0]);
-					conflictLabel2.setText(section.toString() + "\nConflicts with");
+					updateConflictsRight();
 				}
 			}
 			
@@ -235,7 +225,7 @@ public class FirstApplication {
 		conflict.setLayout(new FillLayout());
 		
 		conflictLabel = new Text(conflict, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
-		conflictLabel.setText("\n\n\n\n");
+		conflictLabel.setText("\n\n\n\n\n");
 		
 		Group conflict2 = new Group(calc, SWT.NONE);
 		conflict2.setText("Conflicts");
@@ -243,7 +233,7 @@ public class FirstApplication {
 		conflict2.setLayout(new FillLayout());
 		
 		conflictLabel2 = new Text(conflict2, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
-		conflictLabel2.setText("\n\n\n\n");
+		conflictLabel2.setText("\n\n\n\n\n");
 		
 		Group indiv = new Group(calc, SWT.NONE);
 		indiv.setText("Section Probabilities");
@@ -251,7 +241,7 @@ public class FirstApplication {
 		indiv.setLayout(new FillLayout());
 		
 		indivLabel = new Text(indiv, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
-		indivLabel.setText("\n\n\n\n");
+		indivLabel.setText("\n\n\n\n\n");
 		
 		Group full = new Group(calc, SWT.NONE);
 		full.setText("Subject Probabilities");
@@ -259,7 +249,7 @@ public class FirstApplication {
 		full.setLayout(new FillLayout());
 		
 		fullLabel = new Text(full, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
-		fullLabel.setText("\n\n\n\n");
+		fullLabel.setText("\n\n\n\n\n");
 		
 		listSelect = new ClassListSelect(shellList, SWT.NONE);
 		
@@ -365,6 +355,48 @@ public class FirstApplication {
 		
 		indivLabel.setText(secText);
 		fullLabel.setText(text);
+	}
+	
+	private void updateConflictsLeft()
+	{
+		if(clTable.table.getCellSelection().length < 1)
+			return;
+		
+		Cell selected = clTable.table.getCellSelection()[0];
+		String subject = (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Subject.getIndex());
+		String section = (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Section.getIndex());
+		
+		String text = subject + " " + section + " conflicts with: \n"; 
+		
+		Section s = cList.getSection(subject, section);
+		for(Section t: cList.getList())
+		{
+			if(t.getCourse().compareToIgnoreCase(s.getCourse()) != 0 && t.doesConflictWith(s))
+				text += t.getCourse() + " " + t.getSection() + "\n";
+		}
+		
+		fillNewLines(text, 5);
+		
+		conflictLabel.setText(text);
+	}
+	
+	private void updateConflictsRight()
+	{
+		if(list.getSelectionCount() < 1)
+			return;
+		
+		Section s = cList.getSection(list.getItem(list.getSelectionIndex()));
+		String text = s.getCourse() + " " + s.getSection() + " conflicts with:\n";
+		for(String title: list.getItems())
+		{
+			Section t = cList.getSection(title);
+			if(t.getCourse().compareToIgnoreCase(s.getCourse()) != 0 && t.doesConflictWith(s))
+				text += t.getCourse() + " " + t.getSection() + "\n";
+		}
+		
+		fillNewLines(text, 5);
+		
+		conflictLabel2.setText(text);
 	}
 	
 	private String fillNewLines(String value, int numLines)
