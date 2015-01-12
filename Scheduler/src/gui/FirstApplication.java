@@ -208,7 +208,7 @@ public class FirstApplication {
 		shellSched.open();
 		shellList.open();
 		shellList.setMaximized(true);
-		shellSched.setVisible(false);
+		shellSched.dispose();
 		while((!shellSched.isDisposed() && shellSched.isVisible()) || (!shellList.isDisposed() && shellList.isVisible()))
 		{
 			if(!display.readAndDispatch())
