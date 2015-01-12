@@ -45,6 +45,10 @@ public abstract class Enlistable {
 	 */
 	public boolean doesConflictWith(Enlistable e)
 	{
+		//Check if the same
+		if(e.equals(this))
+			return false;
+		
 		//Check if times are conflicting
 		for(Timeslot s : e.getTimes())
 		{
