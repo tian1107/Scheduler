@@ -2,25 +2,26 @@ package gui;
 import java.io.IOException;
 
 import org.agilemore.agilegrid.Cell;
-import org.agilemore.agilegrid.CellRow;
+import org.agilemore.agilegrid.ISelectionChangedListener;
+import org.agilemore.agilegrid.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import schedule.classes.Section;
 import schedule.database.ClassList;
 
 /**
@@ -38,6 +39,13 @@ public class FirstApplication {
 	protected ScheduleTable scTable;
 	protected ClassListTable clTable;
 	protected List list;
+
+	private Text conflictLabel;
+	private Text conflictLabel2;
+	private Text indivLabel;
+	private Text fullLabel;
+
+	private ClassList cList;
 	
 	public FirstApplication()
 	{
@@ -68,6 +76,20 @@ public class FirstApplication {
 		clTableData.minimumHeight = 300;
 		clTableData.widthHint = 300;
 		clTable.setLayoutData(clTableData);
+		clTable.table.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				for(Cell cell : event.getNewSelections())
+				{
+					String subject = (String) clTable.table.getContentAt(cell.row, ClassListTable.Columns.Subject.getIndex());
+					String section = (String) clTable.table.getContentAt(cell.row, ClassListTable.Columns.Section.getIndex());
+					
+					Section selected = cList.getSection(subject, section);
+					conflictLabel.setText(selected.toString());
+				}
+			}
+		});
 		
 		Composite control = new Composite(selection, SWT.NONE);
 		control.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true));
@@ -172,6 +194,59 @@ public class FirstApplication {
 		GridData listData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		listData.widthHint = 300;
 		list.setLayoutData(listData);
+		list.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(list.getSelectionCount() > 0)
+				{
+					Section section = cList.getSection(list.getSelection()[0]);
+					conflictLabel2.setText(section.toString() + "\nConflicts with");
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				System.out.println("Here!");
+				
+			}
+		});
+		
+		Composite calc = new Composite(shellList, SWT.NONE);
+		calc.setLayout(new GridLayout(2, true));
+		calc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		
+		Group conflict = new Group(calc, SWT.NONE);
+		conflict.setText("Conflicts");
+		conflict.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		conflict.setLayout(new FillLayout());
+		
+		conflictLabel = new Text(conflict, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
+		conflictLabel.setText("\n\n\n\n");
+		
+		Group conflict2 = new Group(calc, SWT.NONE);
+		conflict2.setText("Conflicts");
+		conflict2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		conflict2.setLayout(new FillLayout());
+		
+		conflictLabel2 = new Text(conflict2, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
+		conflictLabel2.setText("\n\n\n\n");
+		
+		Group indiv = new Group(calc, SWT.NONE);
+		indiv.setText("Section Probabilities");
+		indiv.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		indiv.setLayout(new FillLayout());
+		
+		indivLabel = new Text(indiv, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
+		indivLabel.setText("\n\n\n\n");
+		
+		Group full = new Group(calc, SWT.NONE);
+		full.setText("Subject Probabilities");
+		full.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		full.setLayout(new FillLayout());
+		
+		fullLabel = new Text(full, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
+		fullLabel.setText("\n\n\n\n");
 		
 		shellList.pack();
 	}
@@ -203,6 +278,7 @@ public class FirstApplication {
 	
 	public void setClassList(ClassList list)
 	{
+		this.cList = list;
 		scTable.setSections(list.getList());
 		clTable.setList(list);
 	}
@@ -233,7 +309,7 @@ public class FirstApplication {
 		
 		ClassList list;
 		try {
-			list = new ClassList(new String[]{"EEE 35", "EEE 23", "eee 52", "eee 51"});
+			list = new ClassList(new String[]{"EEE 23", "eee 52", "eee 35"});
 			list.removeUseless();
 			fa.setClassList(list);
 		} catch (IOException e1) {
