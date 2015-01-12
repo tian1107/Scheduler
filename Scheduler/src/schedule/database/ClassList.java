@@ -94,6 +94,22 @@ public class ClassList {
 		return sections;
 	}
 	
+	public Section getSection(String title)
+	{
+		String [] strings = title.split(" ");
+		return getSection(strings[0] + " " + strings[1], strings[2]);
+	}
+	
+	public Section getSection(String subject, String section)
+	{
+		for(Section s: sections)
+		{
+			if(s.getCourse().equalsIgnoreCase(subject) && s.getSection().equalsIgnoreCase(section))
+				return s;
+		}
+		return null;
+	}
+	
 	//Testing
 	public static void main(String [] args) throws Exception
 	{
