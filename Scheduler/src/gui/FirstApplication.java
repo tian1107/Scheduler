@@ -54,18 +54,22 @@ public class FirstApplication {
 		
 		shellList = new Shell(display, SWT.SHELL_TRIM | (SWT.RESIZE));
 		
-		shellList.setLayout(new GridLayout(3, false));
+		shellList.setLayout(new GridLayout(1, false));
 		
 		shellList.setText("Scheduler");
 		
-		clTable = new ClassListTable(shellList, SWT.NONE);
+		Composite selection = new Composite(shellList, SWT.NONE);
+		selection.setLayout(new GridLayout(3, false));
+		selection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		clTable = new ClassListTable(selection, SWT.NONE);
 		
 		GridData clTableData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		clTableData.minimumHeight = 300;
 		clTableData.widthHint = 300;
 		clTable.setLayoutData(clTableData);
 		
-		Composite control = new Composite(shellList, SWT.NONE);
+		Composite control = new Composite(selection, SWT.NONE);
 		control.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true));
 		control.setLayout(new GridLayout(1, false));
 		
@@ -164,7 +168,7 @@ public class FirstApplication {
 
 		control.pack();
 		
-		list = new List(shellList, SWT.BORDER);
+		list = new List(selection, SWT.BORDER);
 		GridData listData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		listData.widthHint = 300;
 		list.setLayoutData(listData);
