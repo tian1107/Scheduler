@@ -26,7 +26,7 @@ public class AgileGridUtils {
 				}
 			}
 
-			for (int i = 0; i < table.getLayoutAdvisor().getColumnCount(); i++) {
+			for (int i = 0; i < table.getLayoutAdvisor().getRowCount(); i++) {
 				width = table.getCellRendererProvider().getCellRenderer(i, column)
 						.getOptimalWidth(gc, i, column);
 				if (width > optWidth) {
