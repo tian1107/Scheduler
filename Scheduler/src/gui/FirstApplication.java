@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.jsoup.helper.StringUtil;
 
 import schedule.classes.Section;
 import schedule.database.ClassList;
@@ -53,9 +54,10 @@ public class FirstApplication {
 	public FirstApplication()
 	{
 		display = new Display();
+		subProb = new HashMap<String, Float>();
+		
 		createShellList();
 		createShellSched();
-		subProb = new HashMap<String, Float>();
 	}
 	
 	private void createShellList()
@@ -260,6 +262,8 @@ public class FirstApplication {
 		fullLabel.setText("\n\n\n\n");
 		
 		shellList.pack();
+		
+		updateSubjectProbabilities();
 	}
 	
 	private void createShellSched()
@@ -331,8 +335,24 @@ public class FirstApplication {
 		
 		text = String.format("All: %.3f%%\n", totalProb * 100) + text;
 		
+		//Make it always to have at least five lines
+		text = fillNewLines(text, 5);
+		secText = fillNewLines(secText, 5);
+		
 		indivLabel.setText(secText);
 		fullLabel.setText(text);
+	}
+	
+	private String fillNewLines(String value, int numLines)
+	{
+		int lines = value.length() - value.replace("\n", "").length();
+		while(lines < 4)
+		{
+			value += "\n";
+			lines++;
+		}
+		
+		return value;
 	}
 	
 	public void setClassList(ClassList list)
