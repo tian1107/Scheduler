@@ -38,7 +38,7 @@ public class Timeslot {
 		if((this.days & timeslot.days) != 0)
 		{
 			//Check for intersection
-			return (this.from.getValue() <= timeslot.to.getValue() && this.to.getValue() >= timeslot.from.getValue());  
+			return (this.from.getValue() < timeslot.to.getValue() && this.to.getValue() > timeslot.from.getValue());  
 		}
 		
 		return false;
