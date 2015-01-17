@@ -3,6 +3,8 @@ package com.gmail.icbfernandez2012.scheduler.gui;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -46,18 +48,16 @@ public class ClassListSelect extends Dialog
 
 		Button add = new Button(upper, SWT.NONE);
 		add.setText("Add Subject");
-		add.addMouseListener(new MouseAdapter() {
+		add.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e)
+			public void widgetSelected(SelectionEvent e)
 			{
-				if (e.button == 1)
+				if (list.indexOf(text.getText()) < 0)
 				{
-					if (list.indexOf(text.getText()) < 0)
-					{
-						list.add(text.getText());
-						text.setText("");
-						selected = list.getItems();
-					}
+					list.add(text.getText());
+					text.setText("");
+					selected = list.getItems();
+					text.setFocus();
 				}
 			}
 		});
@@ -84,6 +84,7 @@ public class ClassListSelect extends Dialog
 		list.setItems(selected);
 
 		shell.pack();
+		shell.setDefaultButton(add);
 
 		shell.open();
 		Display display = parent.getDisplay();
