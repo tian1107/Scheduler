@@ -1,80 +1,37 @@
 package com.gmail.icbfernandez2012.scheduler.schedule.database;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import com.gmail.icbfernandez2012.scheduler.schedule.classes.Section;
+import com.gmail.icbfernandez2012.scheduler.schedule.database.aggregator.ClassAggregator;
+import com.gmail.icbfernandez2012.scheduler.schedule.database.aggregator.LocalClassAggregator;
 
 public class ClassList
 {
-
+	private ArrayList<ClassAggregator>	aggregators;
 	protected ArrayList<Section>	sections;
 
-	public ClassList(String[] shortNames) throws IOException
+	public ClassList(String[] shortNames)
 	{
+		aggregators = new ArrayList<ClassAggregator>();
+		aggregators.add(new LocalClassAggregator(new String[] {
+				"Z:/scheduler/test/eee.html", "Z:/scheduler/test/coe.html" }));
+
 		sections = new ArrayList<Section>();
 
-		for (String s : shortNames)
+		setList(shortNames);
+	}
+	
+	public void setList(String[] shortNames)
+	{
+		sections.clear();
+
+		for (String subject : shortNames)
 		{
-			ArrayList<Section> courseSections = new ArrayList<Section>();
-
-			Document x = Jsoup.parse(new File("Z:/scheduler/test/eee.html"),
-					"utf-8", "");
-			Elements classes = x.select("#tbl_schedule tbody tr");
-
-			boolean needsMerge = false;
-
-			Iterator<Element> iter = classes.iterator();
-			while (iter.hasNext())
+			for (ClassAggregator agg : aggregators)
 			{
-				Element current = iter.next();
-
-				Section newSection = new Section(current);
-				// TODO For multiple blocks, temp solution
-				int blocks = Integer.parseInt(current.child(0).attr("rowspan"));
-				while (--blocks > 0)
-					iter.next();
-
-				if (newSection.doesContainCourse(s))
-				{
-					if (newSection.getUnits() <= 0.0f)
-					{
-						needsMerge = true;
-					}
-
-					courseSections.add(newSection);
-				}
-			}
-
-			if (needsMerge)
-			{
-				ArrayList<Section> retainList = new ArrayList<Section>();
-
-				for (Section subsection : courseSections)
-				{
-					for (Section mainSection : courseSections)
-					{
-						if (subsection.isSubsectionOf(mainSection))
-						{
-							subsection.mergeSection(mainSection);
-							retainList.add(subsection);
-							break;
-						}
-					}
-				}
-
-				sections.addAll(retainList);
-			}
-			else
-			{
-				sections.addAll(courseSections);
+				sections.addAll(agg.getCourseEnlistables(subject));
 			}
 		}
 	}

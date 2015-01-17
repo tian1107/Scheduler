@@ -2,10 +2,10 @@ package com.gmail.icbfernandez2012.scheduler.schedule.database.aggregator;
 
 import java.util.ArrayList;
 
-import com.gmail.icbfernandez2012.scheduler.schedule.classes.Enlistable;
+import com.gmail.icbfernandez2012.scheduler.schedule.classes.Section;
 
 public interface ClassAggregator
 {
 
-	public ArrayList<Enlistable> getCourseEnlistables(String course);
+	public ArrayList<Section> getCourseEnlistables(String course);
 }

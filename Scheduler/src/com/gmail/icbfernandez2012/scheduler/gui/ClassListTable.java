@@ -1,7 +1,5 @@
 package com.gmail.icbfernandez2012.scheduler.gui;
 
-import java.io.IOException;
-
 import org.agilemore.agilegrid.AgileGrid;
 import org.agilemore.agilegrid.ColumnSortComparator;
 import org.agilemore.agilegrid.ColumnSortOnClick;
@@ -67,14 +65,7 @@ public class ClassListTable extends Composite
 	{
 		super(parent, style);
 
-		try
-		{
-			list = new ClassList(new String[] {});
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		list = new ClassList(new String[] {});
 
 		setLayout(new FillLayout());
 		table = new AgileGrid(this, SWT.V_SCROLL | SWT.H_SCROLL
