@@ -1,4 +1,5 @@
 package gui;
+
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -31,77 +32,81 @@ import schedule.database.ClassList;
  * @author Ian Christian Fernandez
  *
  */
-public class FirstApplication {
-	
-	protected Display display;
-	
-	protected Shell shellSched;
-	protected Shell shellList;
+public class FirstApplication
+{
 
-	protected ScheduleTable scTable;
-	protected ClassListTable clTable;
-	protected List list;
-	protected ClassListSelect listSelect;
+	protected Display			display;
 
-	private Text conflictLabel;
-	private Text conflictLabel2;
-	private Text indivLabel;
-	private Text fullLabel;
+	protected Shell				shellSched;
+	protected Shell				shellList;
 
-	private ClassList cList;
-	
+	protected ScheduleTable		scTable;
+	protected ClassListTable	clTable;
+	protected List				list;
+	protected ClassListSelect	listSelect;
+
+	private Text				conflictLabel;
+	private Text				conflictLabel2;
+	private Text				indivLabel;
+	private Text				fullLabel;
+
+	private ClassList			cList;
+
 	public FirstApplication()
 	{
 		display = new Display();
-		
+
 		createShellList();
 		createShellSched();
 	}
-	
+
 	private void createShellList()
 	{
-		if(display == null) return;
-		
-		if(display.isDisposed()) return;
-		
+		if (display == null) return;
+
+		if (display.isDisposed()) return;
+
 		shellList = new Shell(display, SWT.SHELL_TRIM | (SWT.RESIZE));
-		
+
 		shellList.setLayout(new GridLayout(1, false));
-		
+
 		shellList.setText("Scheduler");
-		
+
 		Composite selection = new Composite(shellList, SWT.NONE);
 		selection.setLayout(new GridLayout(3, false));
 		selection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+
 		clTable = new ClassListTable(selection, SWT.NONE);
-		
+
 		GridData clTableData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		clTableData.minimumHeight = 300;
 		clTableData.widthHint = 300;
 		clTable.setLayoutData(clTableData);
-		clTable.table.addSelectionChangedListener(new ISelectionChangedListener() {
-			
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				updateConflictsLeft();
-			}
-		});
-		
+		clTable.table
+				.addSelectionChangedListener(new ISelectionChangedListener() {
+
+					@Override
+					public void selectionChanged(SelectionChangedEvent event)
+					{
+						updateConflictsLeft();
+					}
+				});
+
 		Composite control = new Composite(selection, SWT.NONE);
 		control.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true));
 		control.setLayout(new GridLayout(1, false));
-		
+
 		Button moveUp = new Button(control, SWT.NONE);
 		moveUp.setText("ª");
 		moveUp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		moveUp.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
-				if(e.button == 1 && list.getSelectionCount() > 0)
+			public void mouseDown(MouseEvent e)
+			{
+				if (e.button == 1 && list.getSelectionCount() > 0)
 				{
 					int select = list.getSelectionIndex();
-					if(select > 0)
+					if (select > 0)
 					{
 						String upper = list.getItem(select - 1);
 						String lower = list.getItem(select);
@@ -114,20 +119,29 @@ public class FirstApplication {
 			}
 		});
 		moveUp.setToolTipText("Move Item Up");
-		
+
 		Button add = new Button(control, SWT.NONE);
 		add.setText(">");
 		add.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		add.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
-				if(e.button == 1)
+			public void mouseDown(MouseEvent e)
+			{
+				if (e.button == 1)
 				{
 					Cell selected = clTable.table.getCellSelection()[0];
-					if(selected.row > -1 && selected.row < clTable.table.getLayoutAdvisor().getRowCount())
+					if (selected.row > -1
+							&& selected.row < clTable.table.getLayoutAdvisor()
+									.getRowCount())
 					{
-						String toAdd = (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Subject.getIndex())
-								+ " " + (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Section.getIndex());
+						String toAdd = (String) clTable.table.getContentAt(
+								selected.row,
+								ClassListTable.Columns.Subject.getIndex())
+								+ " "
+								+ (String) clTable.table.getContentAt(
+										selected.row,
+										ClassListTable.Columns.Section
+												.getIndex());
 						if (list.indexOf(toAdd) < 0)
 						{
 							list.add(toAdd);
@@ -138,14 +152,15 @@ public class FirstApplication {
 			}
 		});
 		add.setToolTipText("Add to List");
-		
+
 		Button remove = new Button(control, SWT.NONE);
 		remove.setText("<");
 		remove.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		remove.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
-				if(e.button == 1 && list.getSelectionCount() > 0)
+			public void mouseDown(MouseEvent e)
+			{
+				if (e.button == 1 && list.getSelectionCount() > 0)
 				{
 					list.remove(list.getSelectionIndex());
 					updateSubjectProbabilities();
@@ -153,17 +168,18 @@ public class FirstApplication {
 			}
 		});
 		remove.setToolTipText("Remove from List");
-		
+
 		Button moveDown = new Button(control, SWT.NONE);
 		moveDown.setText("«");
 		moveDown.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		moveDown.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
-				if(e.button == 1 && list.getSelectionCount() > 0)
+			public void mouseDown(MouseEvent e)
+			{
+				if (e.button == 1 && list.getSelectionCount() > 0)
 				{
 					int select = list.getSelectionIndex();
-					if(select < list.getItemCount() - 1)
+					if (select < list.getItemCount() - 1)
 					{
 						String upper = list.getItem(select);
 						String lower = list.getItem(select + 1);
@@ -176,14 +192,15 @@ public class FirstApplication {
 			}
 		});
 		moveDown.setToolTipText("Move Item Down");
-		
+
 		Button removeAll = new Button(control, SWT.NONE);
 		removeAll.setText("<<");
 		removeAll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		removeAll.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
-				if(e.button == 1)
+			public void mouseDown(MouseEvent e)
+			{
+				if (e.button == 1)
 				{
 					list.removeAll();
 					updateSubjectProbabilities();
@@ -193,79 +210,87 @@ public class FirstApplication {
 		removeAll.setToolTipText("Remove All");
 
 		control.pack();
-		
+
 		list = new List(selection, SWT.BORDER);
 		GridData listData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		listData.widthHint = 300;
 		list.setLayoutData(listData);
 		list.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(list.getSelectionCount() > 0)
+			public void widgetSelected(SelectionEvent e)
+			{
+				if (list.getSelectionCount() > 0)
 				{
 					updateConflictsRight();
 				}
 			}
-			
+
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
+			public void widgetDefaultSelected(SelectionEvent e)
+			{
 				System.out.println("Here!");
-				
+
 			}
 		});
-		
+
 		Composite calc = new Composite(shellList, SWT.NONE);
 		calc.setLayout(new GridLayout(2, true));
 		calc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		
+
 		Group conflict = new Group(calc, SWT.NONE);
 		conflict.setText("Conflicts");
 		conflict.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		conflict.setLayout(new FillLayout());
-		
-		conflictLabel = new Text(conflict, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
+
+		conflictLabel = new Text(conflict, SWT.MULTI | SWT.READ_ONLY
+				| SWT.V_SCROLL);
 		conflictLabel.setText("\n\n\n\n\n");
-		
+
 		Group conflict2 = new Group(calc, SWT.NONE);
 		conflict2.setText("Conflicts");
 		conflict2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		conflict2.setLayout(new FillLayout());
-		
-		conflictLabel2 = new Text(conflict2, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
+
+		conflictLabel2 = new Text(conflict2, SWT.MULTI | SWT.READ_ONLY
+				| SWT.V_SCROLL);
 		conflictLabel2.setText("\n\n\n\n\n");
-		
+
 		Group indiv = new Group(calc, SWT.NONE);
 		indiv.setText("Section Probabilities");
 		indiv.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		indiv.setLayout(new FillLayout());
-		
+
 		indivLabel = new Text(indiv, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
 		indivLabel.setText("\n\n\n\n\n");
-		
+
 		Group full = new Group(calc, SWT.NONE);
 		full.setText("Subject Probabilities");
 		full.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		full.setLayout(new FillLayout());
-		
+
 		fullLabel = new Text(full, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
 		fullLabel.setText("\n\n\n\n\n");
-		
+
 		listSelect = new ClassListSelect(shellList, SWT.NONE);
-		
+
 		Button subjectSelect = new Button(calc, SWT.NONE);
-		subjectSelect.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		subjectSelect.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				false));
 		subjectSelect.setText("Edit Subject List");
 		subjectSelect.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
-				if(e.button == 1)
+			public void mouseDown(MouseEvent e)
+			{
+				if (e.button == 1)
 				{
-					try {
+					try
+					{
 						ClassList lst = new ClassList(listSelect.open());
 						System.out.println(lst.getList().size());
 						setClassList(lst);
-					} catch (Exception e1) {
+					} catch (Exception e1)
+					{
 						MessageBox box = new MessageBox(shellList, SWT.ERROR);
 						box.setText("Error");
 						box.setMessage(e1.getMessage());
@@ -274,25 +299,25 @@ public class FirstApplication {
 				}
 			}
 		});
-		
+
 		shellList.pack();
-		
+
 		updateSubjectProbabilities();
 	}
-	
+
 	private void createShellSched()
 	{
 		shellSched = new Shell(display);
-		
+
 		shellSched.setLayout(new GridLayout(1, false));
 		shellSched.setSize(800, 600);
-		
+
 		shellSched.setText("Scheduler");
-		
+
 		Composite upper = new Composite(shellSched, SWT.NONE);
 		upper.setLayout(new GridLayout(2, false));
 		upper.setLayoutData(new GridData(SWT.FILL, SWT.UP, true, false));
-		
+
 		Label label = new Label(upper, SWT.NONE);
 		label.setText("This is a label:");
 		label.setToolTipText("This is the tooltip of this label");
@@ -300,144 +325,147 @@ public class FirstApplication {
 		Text text = new Text(upper, SWT.NONE);
 		text.setText("This is the text in the text widget");
 		text.setLayoutData(new GridData(SWT.FILL, SWT.UP, true, false));
-				
+
 		scTable = new ScheduleTable(shellSched, SWT.NONE);
 		scTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
-	
+
 	private void updateSubjectProbabilities()
 	{
 		String secText = "";
 
 		HashMap<String, Float> subProb = new HashMap<String, Float>();
 		HashSet<String> subjects = new HashSet<String>();
-		for(int index = 0; index < list.getItemCount(); index++)
+		for (int index = 0; index < list.getItemCount(); index++)
 		{
 			String title = list.getItem(index);
 			Section s = cList.getSection(title);
 			subjects.add(s.getCourse());
 			float posteriori = 1.0f;
-			for(int c = 0; c < index; c++)
+			for (int c = 0; c < index; c++)
 			{
 				String cTitle = list.getItem(c);
 				Section con = cList.getSection(cTitle);
-				
-				if(con.doesConflictWith(s))
+
+				if (con.doesConflictWith(s))
 				{
 					posteriori *= 1 - con.getProbability();
 				}
 			}
 			posteriori *= s.getProbability();
 			secText += String.format("%s: %.3f%%\n", title, posteriori * 100);
-			if(subProb.containsKey(s.getCourse()))
+			if (subProb.containsKey(s.getCourse()))
 			{
-				subProb.put(s.getCourse(), subProb.get(s.getCourse()) + posteriori);
+				subProb.put(s.getCourse(), subProb.get(s.getCourse())
+						+ posteriori);
 			}
 			else
 			{
 				subProb.put(s.getCourse(), posteriori);
 			}
 		}
-		
+
 		float totalProb = 1.0f;
 		String text = "";
-		for(String title : subjects)
+		for (String title : subjects)
 		{
-			text += String.format("%s: %.3f%%\n", title, subProb.get(title) * 100);
+			text += String.format("%s: %.3f%%\n", title,
+					subProb.get(title) * 100);
 			totalProb *= subProb.get(title);
 		}
-		
+
 		text = String.format("All: %.3f%%\n", totalProb * 100) + text;
-		
-		//Make it always to have at least five lines
+
+		// Make it always to have at least five lines
 		text = fillNewLines(text, 5);
 		secText = fillNewLines(secText, 5);
-		
+
 		indivLabel.setText(secText);
 		fullLabel.setText(text);
 	}
-	
+
 	private void updateConflictsLeft()
 	{
-		if(clTable.table.getCellSelection().length < 1)
-			return;
-		
+		if (clTable.table.getCellSelection().length < 1) return;
+
 		Cell selected = clTable.table.getCellSelection()[0];
-		String subject = (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Subject.getIndex());
-		String section = (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Section.getIndex());
-		
-		String text = subject + " " + section + " conflicts with: \n"; 
-		
+		String subject = (String) clTable.table.getContentAt(selected.row,
+				ClassListTable.Columns.Subject.getIndex());
+		String section = (String) clTable.table.getContentAt(selected.row,
+				ClassListTable.Columns.Section.getIndex());
+
+		String text = subject + " " + section + " conflicts with: \n";
+
 		Section s = cList.getSection(subject, section);
-		for(Section t: cList.getList())
+		for (Section t : cList.getList())
 		{
-			if(t.getCourse().compareToIgnoreCase(s.getCourse()) != 0 && t.doesConflictWith(s))
+			if (t.getCourse().compareToIgnoreCase(s.getCourse()) != 0
+					&& t.doesConflictWith(s))
 				text += t.getCourse() + " " + t.getSection() + "\n";
 		}
-		
+
 		fillNewLines(text, 5);
-		
+
 		conflictLabel.setText(text);
 	}
-	
+
 	private void updateConflictsRight()
 	{
-		if(list.getSelectionCount() < 1)
-			return;
-		
+		if (list.getSelectionCount() < 1) return;
+
 		Section s = cList.getSection(list.getItem(list.getSelectionIndex()));
-		String text = s.getCourse() + " " + s.getSection() + " conflicts with:\n";
-		for(String title: list.getItems())
+		String text = s.getCourse() + " " + s.getSection()
+				+ " conflicts with:\n";
+		for (String title : list.getItems())
 		{
 			Section t = cList.getSection(title);
-			if(t.getCourse().compareToIgnoreCase(s.getCourse()) != 0 && t.doesConflictWith(s))
+			if (t.getCourse().compareToIgnoreCase(s.getCourse()) != 0
+					&& t.doesConflictWith(s))
 				text += t.getCourse() + " " + t.getSection() + "\n";
 		}
-		
+
 		fillNewLines(text, 5);
-		
+
 		conflictLabel2.setText(text);
 	}
-	
+
 	private String fillNewLines(String value, int numLines)
 	{
 		int lines = value.length() - value.replace("\n", "").length();
-		while(lines < 4)
+		while (lines < 4)
 		{
 			value += "\n";
 			lines++;
 		}
-		
+
 		return value;
 	}
-	
+
 	public void setClassList(ClassList list)
 	{
 		this.cList = list;
 		scTable.setSections(list.getList());
 		clTable.setList(list);
 	}
-	
+
 	public void start()
 	{
 		shellSched.open();
 		shellList.open();
 		shellList.setMaximized(true);
 		shellSched.setVisible(false);
-		while((!shellSched.isDisposed() && shellSched.isVisible()) || (!shellList.isDisposed() && shellList.isVisible()))
+		while ((!shellSched.isDisposed() && shellSched.isVisible())
+				|| (!shellList.isDisposed() && shellList.isVisible()))
 		{
-			if(!display.readAndDispatch())
-				display.sleep();
+			if (!display.readAndDispatch()) display.sleep();
 		}
-		
-		if(!shellSched.isDisposed())
-			shellSched.dispose();
-		if(!shellList.isDisposed())
-			shellList.dispose();
+
+		if (!shellSched.isDisposed()) shellSched.dispose();
+		if (!shellList.isDisposed()) shellList.dispose();
 		display.dispose();
 	}
 
-	public static void main (String [] args)
+	public static void main(String[] args)
 	{
 		FirstApplication fa = new FirstApplication();
 		fa.start();
