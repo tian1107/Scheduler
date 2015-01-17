@@ -1,8 +1,6 @@
 package com.gmail.icbfernandez2012.scheduler.gui;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -64,11 +62,11 @@ public class ClassListSelect extends Dialog
 
 		Button remove = new Button(upper, SWT.NONE);
 		remove.setText("Remove Selected");
-		remove.addMouseListener(new MouseAdapter() {
+		remove.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e)
+			public void widgetSelected(SelectionEvent e)
 			{
-				if (e.button == 1 && list.getSelectionCount() > 0)
+				if (list.getSelectionCount() > 0)
 				{
 					list.remove(list.getSelectionIndex());
 					selected = list.getItems();

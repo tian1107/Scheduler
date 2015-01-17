@@ -7,10 +7,8 @@ import org.agilemore.agilegrid.Cell;
 import org.agilemore.agilegrid.ISelectionChangedListener;
 import org.agilemore.agilegrid.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -58,6 +56,8 @@ public class FirstApplication
 
 		createShellList();
 		createShellSched();
+
+		cList = new ClassList(new String[] {});
 	}
 
 	private void createShellList()
@@ -99,11 +99,11 @@ public class FirstApplication
 		Button moveUp = new Button(control, SWT.NONE);
 		moveUp.setText("ª");
 		moveUp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		moveUp.addMouseListener(new MouseAdapter() {
+		moveUp.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e)
+			public void widgetSelected(SelectionEvent e)
 			{
-				if (e.button == 1 && list.getSelectionCount() > 0)
+				if (list.getSelectionCount() > 0)
 				{
 					int select = list.getSelectionIndex();
 					if (select > 0)
@@ -123,30 +123,27 @@ public class FirstApplication
 		Button add = new Button(control, SWT.NONE);
 		add.setText(">");
 		add.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		add.addMouseListener(new MouseAdapter() {
+		add.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e)
+			public void widgetSelected(SelectionEvent e)
 			{
-				if (e.button == 1)
+				if (clTable.table.getCellSelection().length < 1) return;
+
+				Cell selected = clTable.table.getCellSelection()[0];
+				if (selected.row > -1
+						&& selected.row < clTable.table.getLayoutAdvisor()
+								.getRowCount())
 				{
-					Cell selected = clTable.table.getCellSelection()[0];
-					if (selected.row > -1
-							&& selected.row < clTable.table.getLayoutAdvisor()
-									.getRowCount())
+					String toAdd = (String) clTable.table.getContentAt(
+							selected.row,
+							ClassListTable.Columns.Subject.getIndex())
+							+ " "
+							+ (String) clTable.table.getContentAt(selected.row,
+									ClassListTable.Columns.Section.getIndex());
+					if (list.indexOf(toAdd) < 0)
 					{
-						String toAdd = (String) clTable.table.getContentAt(
-								selected.row,
-								ClassListTable.Columns.Subject.getIndex())
-								+ " "
-								+ (String) clTable.table.getContentAt(
-										selected.row,
-										ClassListTable.Columns.Section
-												.getIndex());
-						if (list.indexOf(toAdd) < 0)
-						{
-							list.add(toAdd);
-							updateSubjectProbabilities();
-						}
+						list.add(toAdd);
+						updateSubjectProbabilities();
 					}
 				}
 			}
@@ -156,11 +153,11 @@ public class FirstApplication
 		Button remove = new Button(control, SWT.NONE);
 		remove.setText("<");
 		remove.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		remove.addMouseListener(new MouseAdapter() {
+		remove.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e)
+			public void widgetSelected(SelectionEvent e)
 			{
-				if (e.button == 1 && list.getSelectionCount() > 0)
+				if (list.getSelectionCount() > 0)
 				{
 					list.remove(list.getSelectionIndex());
 					updateSubjectProbabilities();
@@ -172,11 +169,11 @@ public class FirstApplication
 		Button moveDown = new Button(control, SWT.NONE);
 		moveDown.setText("«");
 		moveDown.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		moveDown.addMouseListener(new MouseAdapter() {
+		moveDown.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e)
+			public void widgetSelected(SelectionEvent e)
 			{
-				if (e.button == 1 && list.getSelectionCount() > 0)
+				if (list.getSelectionCount() > 0)
 				{
 					int select = list.getSelectionIndex();
 					if (select < list.getItemCount() - 1)
@@ -196,15 +193,12 @@ public class FirstApplication
 		Button removeAll = new Button(control, SWT.NONE);
 		removeAll.setText("<<");
 		removeAll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		removeAll.addMouseListener(new MouseAdapter() {
+		removeAll.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e)
+			public void widgetSelected(SelectionEvent e)
 			{
-				if (e.button == 1)
-				{
-					list.removeAll();
-					updateSubjectProbabilities();
-				}
+				list.removeAll();
+				updateSubjectProbabilities();
 			}
 		});
 		removeAll.setToolTipText("Remove All");
@@ -215,7 +209,7 @@ public class FirstApplication
 		GridData listData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		listData.widthHint = 300;
 		list.setLayoutData(listData);
-		list.addSelectionListener(new SelectionListener() {
+		list.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e)
@@ -224,13 +218,6 @@ public class FirstApplication
 				{
 					updateConflictsRight();
 				}
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e)
-			{
-				System.out.println("Here!");
-
 			}
 		});
 
@@ -278,28 +265,24 @@ public class FirstApplication
 		subjectSelect.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				false));
 		subjectSelect.setText("Edit Subject List");
-		subjectSelect.addMouseListener(new MouseAdapter() {
+		subjectSelect.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e)
+			public void widgetSelected(SelectionEvent e)
 			{
-				if (e.button == 1)
+				try
 				{
-					try
-					{
-						ClassList lst = new ClassList(listSelect.open());
-						System.out.println(lst.getList().size());
-						setClassList(lst);
-					} catch (Exception e1)
-					{
-						MessageBox box = new MessageBox(shellList, SWT.ERROR);
-						box.setText("Error");
-						box.setMessage(e1.getMessage());
-						box.open();
-					}
+					setClassList(listSelect.open());
+				} catch (Exception e1)
+				{
+					MessageBox box = new MessageBox(shellList, SWT.ERROR);
+					box.setText("Error");
+					box.setMessage(e1.getMessage());
+					box.open();
 				}
 			}
 		});
 
+		shellList.setDefaultButton(subjectSelect);
 		shellList.pack();
 
 		updateSubjectProbabilities();
@@ -441,11 +424,11 @@ public class FirstApplication
 		return value;
 	}
 
-	public void setClassList(ClassList list)
+	public void setClassList(String[] list)
 	{
-		this.cList = list;
-		scTable.setSections(list.getList());
-		clTable.setList(list);
+		this.cList.setList(list);
+		scTable.setSections(cList.getList());
+		clTable.setList(cList);
 	}
 
 	public void start()
