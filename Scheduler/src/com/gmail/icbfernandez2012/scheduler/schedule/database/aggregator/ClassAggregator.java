@@ -1,4 +1,4 @@
-package com.gmail.icbfernandez2012.scheduler.schedule.database;
+package com.gmail.icbfernandez2012.scheduler.schedule.database.aggregator;
 
 import java.util.ArrayList;
 
