@@ -1,4 +1,4 @@
-package gui;
+package com.gmail.icbfernandez2012.scheduler.gui;
 
 import org.agilemore.agilegrid.AgileGrid;
 import org.eclipse.swt.graphics.GC;

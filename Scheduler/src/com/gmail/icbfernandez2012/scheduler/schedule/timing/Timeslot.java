@@ -1,4 +1,4 @@
-package schedule.timing;
+package com.gmail.icbfernandez2012.scheduler.schedule.timing;
 
 /**
  * This is

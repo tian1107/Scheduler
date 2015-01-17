@@ -1,10 +1,10 @@
-package schedule.classes;
+package com.gmail.icbfernandez2012.scheduler.schedule.classes;
 
 import java.util.ArrayList;
 
 import org.jsoup.nodes.Element;
 
-import schedule.timing.Timeslot;
+import com.gmail.icbfernandez2012.scheduler.schedule.timing.Timeslot;
 
 /**
  * 

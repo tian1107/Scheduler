@@ -1,4 +1,4 @@
-package schedule.timing;
+package com.gmail.icbfernandez2012.scheduler.schedule.timing;
 
 /**
  * A 24-hour representation of time higher bits: hour, lower bits: minutes

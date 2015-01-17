@@ -1,4 +1,4 @@
-package gui;
+package com.gmail.icbfernandez2012.scheduler.gui;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,8 +24,8 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import schedule.classes.Section;
-import schedule.database.ClassList;
+import com.gmail.icbfernandez2012.scheduler.schedule.classes.Section;
+import com.gmail.icbfernandez2012.scheduler.schedule.database.ClassList;
 
 /**
  * 

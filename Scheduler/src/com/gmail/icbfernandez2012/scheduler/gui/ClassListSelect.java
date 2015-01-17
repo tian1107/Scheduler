@@ -1,4 +1,4 @@
-package gui;
+package com.gmail.icbfernandez2012.scheduler.gui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;

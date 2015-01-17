@@ -1,4 +1,4 @@
-package gui;
+package com.gmail.icbfernandez2012.scheduler.gui;
 
 import java.io.IOException;
 
@@ -17,8 +17,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import schedule.classes.Section;
-import schedule.database.ClassList;
+import com.gmail.icbfernandez2012.scheduler.schedule.classes.Section;
+import com.gmail.icbfernandez2012.scheduler.schedule.database.ClassList;
 
 public class ClassListTable extends Composite
 {

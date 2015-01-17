@@ -1,4 +1,4 @@
-package gui;
+package com.gmail.icbfernandez2012.scheduler.gui;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,9 +16,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import schedule.classes.Section;
-import schedule.timing.Time;
-import schedule.timing.Timeslot;
+import com.gmail.icbfernandez2012.scheduler.schedule.classes.Section;
+import com.gmail.icbfernandez2012.scheduler.schedule.timing.Time;
+import com.gmail.icbfernandez2012.scheduler.schedule.timing.Timeslot;
 
 public class ScheduleTable extends Composite
 {
