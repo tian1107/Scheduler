@@ -10,7 +10,7 @@ import com.gmail.icbfernandez2012.scheduler.schedule.database.aggregator.LocalCl
 public class ClassList
 {
 	private ArrayList<ClassAggregator>	aggregators;
-	protected ArrayList<Section>	sections;
+	protected ArrayList<Section>		sections;
 
 	public ClassList(String[] shortNames)
 	{
@@ -22,7 +22,7 @@ public class ClassList
 
 		setList(shortNames);
 	}
-	
+
 	public void setList(String[] shortNames)
 	{
 		sections.clear();
@@ -56,6 +56,8 @@ public class ClassList
 	public Section getSection(String title)
 	{
 		String[] strings = title.split(" ");
+		if (strings.length < 3)
+			throw new IllegalArgumentException("Section of incorrect format");
 		return getSection(strings[0] + " " + strings[1], strings[2]);
 	}
 
