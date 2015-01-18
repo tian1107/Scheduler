@@ -8,6 +8,8 @@ import org.agilemore.agilegrid.Cell;
 import org.agilemore.agilegrid.ISelectionChangedListener;
 import org.agilemore.agilegrid.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -61,11 +63,21 @@ public class FirstApplication
 		createShellSched();
 
 		cList = new ClassList(new String[] {});
+		load();
+	}
 
+	private void load()
+	{
 		String[] lastList = Configuration.INSTANCE.getProperties()
-				.getProperty("list", ";").split(";");
+				.getProperty("list", "").split(";");
+		String[] secList = Configuration.INSTANCE.getProperties()
+				.getProperty("selList", "").split(";");
 		setClassList(lastList);
+		list.setItems(secList);
+		while (list.indexOf("") > -1)
+			list.remove("");
 		listSelect.selected = lastList;
+		updateSubjectProbabilities();
 	}
 
 	private void createShellList()
@@ -82,6 +94,15 @@ public class FirstApplication
 
 		shellList.setMinimumSize(800, 600);
 
+		shellList.addDisposeListener(new DisposeListener() {
+
+			@Override
+			public void widgetDisposed(DisposeEvent e)
+			{
+				save();
+			}
+		});
+
 		Composite selection = new Composite(shellList, SWT.NONE);
 		selection.setLayout(new GridLayout(3, false));
 		selection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -90,6 +111,7 @@ public class FirstApplication
 
 		GridData clTableData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		clTableData.widthHint = 300;
+		clTableData.heightHint = 240;
 		clTable.setLayoutData(clTableData);
 		clTable.table
 				.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -217,6 +239,7 @@ public class FirstApplication
 		list = new List(selection, SWT.BORDER);
 		GridData listData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		listData.widthHint = 300;
+		listData.heightHint = 240;
 		list.setLayoutData(listData);
 		list.addSelectionListener(new SelectionAdapter() {
 
@@ -237,7 +260,7 @@ public class FirstApplication
 		Group conflict = new Group(calc, SWT.NONE);
 		conflict.setText("Conflicts");
 		GridData conflictData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		conflictData.heightHint = 80;
+		conflictData.heightHint = 60;
 		conflict.setLayoutData(conflictData);
 		conflict.setLayout(new FillLayout());
 
@@ -257,7 +280,7 @@ public class FirstApplication
 		Group indiv = new Group(calc, SWT.NONE);
 		indiv.setText("Section Probabilities");
 		GridData indivData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		indivData.heightHint = 80;
+		indivData.heightHint = 60;
 		indiv.setLayoutData(indivData);
 		indiv.setLayout(new FillLayout());
 
@@ -299,6 +322,15 @@ public class FirstApplication
 		shellList.pack();
 
 		updateSubjectProbabilities();
+	}
+
+	private void save()
+	{
+		Configuration.INSTANCE.getProperties().setProperty("list",
+				StringUtil.join(Arrays.asList(listSelect.selected), ";"));
+		Configuration.INSTANCE.getProperties().setProperty("selList",
+				StringUtil.join(Arrays.asList(list.getItems()), ";"));
+		Configuration.INSTANCE.save();
 	}
 
 	private void createShellSched()
@@ -459,10 +491,6 @@ public class FirstApplication
 		if (!shellSched.isDisposed()) shellSched.dispose();
 		if (!shellList.isDisposed()) shellList.dispose();
 		display.dispose();
-
-		Configuration.INSTANCE.getProperties().setProperty("list",
-				StringUtil.join(Arrays.asList(listSelect.selected), ";"));
-		Configuration.INSTANCE.save();
 	}
 
 	public static void main(String[] args)

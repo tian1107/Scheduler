@@ -56,7 +56,8 @@ public class Configuration
 		// String.valueOf(System.currentTimeMillis() / 1000L));
 		props.setProperty("lastCache", "0");
 		props.setProperty("cacheInvalidationTime", "3600");
-		props.setProperty("list", ";");
+		props.setProperty("list", "");
+		props.setProperty("selList", "");
 	}
 
 	public Properties getProperties()
