@@ -63,7 +63,7 @@ public class FirstApplication
 		cList = new ClassList(new String[] {});
 
 		String[] lastList = Configuration.INSTANCE.getProperties()
-				.getProperty("list").split(";");
+				.getProperty("list", ";").split(";");
 		setClassList(lastList);
 		listSelect.selected = lastList;
 	}
