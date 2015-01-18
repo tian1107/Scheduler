@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.gmail.icbfernandez2012.scheduler.configuration.Configuration;
 import com.gmail.icbfernandez2012.scheduler.schedule.classes.Section;
 import com.gmail.icbfernandez2012.scheduler.schedule.database.ClassList;
 
@@ -446,6 +447,8 @@ public class FirstApplication
 		if (!shellSched.isDisposed()) shellSched.dispose();
 		if (!shellList.isDisposed()) shellList.dispose();
 		display.dispose();
+
+		Configuration.INSTANCE.save();
 	}
 
 	public static void main(String[] args)

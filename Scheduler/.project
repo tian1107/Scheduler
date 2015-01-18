@@ -20,5 +20,10 @@
 			<type>2</type>
 			<location>Z:/scheduler/api</location>
 		</link>
+		<link>
+			<name>test</name>
+			<type>2</type>
+			<location>Z:/scheduler/test</location>
+		</link>
 	</linkedResources>
 </projectDescription>
