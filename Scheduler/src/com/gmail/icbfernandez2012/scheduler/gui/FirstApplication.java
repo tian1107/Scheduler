@@ -1,5 +1,6 @@
 package com.gmail.icbfernandez2012.scheduler.gui;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.jsoup.helper.StringUtil;
 
 import com.gmail.icbfernandez2012.scheduler.configuration.Configuration;
 import com.gmail.icbfernandez2012.scheduler.schedule.classes.Section;
@@ -59,6 +61,11 @@ public class FirstApplication
 		createShellSched();
 
 		cList = new ClassList(new String[] {});
+
+		String[] lastList = Configuration.INSTANCE.getProperties()
+				.getProperty("list").split(";");
+		setClassList(lastList);
+		listSelect.selected = lastList;
 	}
 
 	private void createShellList()
@@ -73,6 +80,8 @@ public class FirstApplication
 
 		shellList.setText("Scheduler");
 
+		shellList.setMinimumSize(800, 600);
+
 		Composite selection = new Composite(shellList, SWT.NONE);
 		selection.setLayout(new GridLayout(3, false));
 		selection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -80,7 +89,6 @@ public class FirstApplication
 		clTable = new ClassListTable(selection, SWT.NONE);
 
 		GridData clTableData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		clTableData.minimumHeight = 300;
 		clTableData.widthHint = 300;
 		clTable.setLayoutData(clTableData);
 		clTable.table
@@ -224,11 +232,13 @@ public class FirstApplication
 
 		Composite calc = new Composite(shellList, SWT.NONE);
 		calc.setLayout(new GridLayout(2, true));
-		calc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		calc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		Group conflict = new Group(calc, SWT.NONE);
 		conflict.setText("Conflicts");
-		conflict.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		GridData conflictData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		conflictData.heightHint = 80;
+		conflict.setLayoutData(conflictData);
 		conflict.setLayout(new FillLayout());
 
 		conflictLabel = new Text(conflict, SWT.MULTI | SWT.READ_ONLY
@@ -237,7 +247,7 @@ public class FirstApplication
 
 		Group conflict2 = new Group(calc, SWT.NONE);
 		conflict2.setText("Conflicts");
-		conflict2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		conflict2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		conflict2.setLayout(new FillLayout());
 
 		conflictLabel2 = new Text(conflict2, SWT.MULTI | SWT.READ_ONLY
@@ -246,7 +256,9 @@ public class FirstApplication
 
 		Group indiv = new Group(calc, SWT.NONE);
 		indiv.setText("Section Probabilities");
-		indiv.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		GridData indivData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		indivData.heightHint = 80;
+		indiv.setLayoutData(indivData);
 		indiv.setLayout(new FillLayout());
 
 		indivLabel = new Text(indiv, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
@@ -254,7 +266,7 @@ public class FirstApplication
 
 		Group full = new Group(calc, SWT.NONE);
 		full.setText("Subject Probabilities");
-		full.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		full.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		full.setLayout(new FillLayout());
 
 		fullLabel = new Text(full, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
@@ -448,6 +460,8 @@ public class FirstApplication
 		if (!shellList.isDisposed()) shellList.dispose();
 		display.dispose();
 
+		Configuration.INSTANCE.getProperties().setProperty("list",
+				StringUtil.join(Arrays.asList(listSelect.selected), ";"));
 		Configuration.INSTANCE.save();
 	}
 
