@@ -72,6 +72,8 @@ public class OnlineClassAggregator implements ClassAggregator, FilenameFilter
 
 	private void getMain(String main) throws IOException
 	{
+		if (main.isEmpty()) return;
+
 		System.err.println("New main!" + main);
 		Connection.Response html = Jsoup.connect(getBaseLocation(Calendar.getInstance()) + main).execute();
 
@@ -129,6 +131,6 @@ public class OnlineClassAggregator implements ClassAggregator, FilenameFilter
 				semester = 2;
 				break;
 		}
-		return String.format("http://crs.upd.edu.ph/schedule/1%d%d/", year, semester);
+		return String.format("http://127.0.0.1:8000/schedule/1%d%d/", year, semester);
 	}
 }
