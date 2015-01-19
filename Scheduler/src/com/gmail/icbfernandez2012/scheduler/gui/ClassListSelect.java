@@ -80,6 +80,8 @@ public class ClassListSelect extends Dialog
 		listData.heightHint = 300;
 		list.setLayoutData(listData);
 		list.setItems(selected);
+		while (list.indexOf("") > -1)
+			list.remove("");
 
 		shell.pack();
 		shell.setDefaultButton(add);
