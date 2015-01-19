@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.jsoup.helper.StringUtil;
@@ -305,16 +304,7 @@ public class FirstApplication
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				try
-				{
-					setClassList(listSelect.open());
-				} catch (Exception e1)
-				{
-					MessageBox box = new MessageBox(shellList, SWT.ERROR);
-					box.setText("Error");
-					box.setMessage(e1.getMessage());
-					box.open();
-				}
+				setClassList(listSelect.open());
 			}
 		});
 

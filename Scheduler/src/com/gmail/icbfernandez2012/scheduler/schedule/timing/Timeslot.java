@@ -17,24 +17,11 @@ public class Timeslot
 	public static final byte		FRIDAY			= 2;
 	public static final byte		SATURDAY		= 1;
 
-	public static final String[]	dayNames		= { "Unknown", "Sunday",
-			"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
-	public static final String[]	dayShortNames	= { "Err", "Su", "M", "T",
-			"W", "Th", "F", "S"					};
+	public static final String[]	dayNames		= { "Unknown", "Sunday", "Monday", "Tuesday", "Wednesday",
+			"Thursday", "Friday", "Saturday"		};
+	public static final String[]	dayShortNames	= { "Err", "Su", "M", "T", "W", "Th", "F", "S" };
 
-	private byte					days;											// most
-																					// signficant
-																					// bit
-																					// not
-																					// used;
-																					// Su
-																					// M
-																					// T
-																					// W
-																					// Th
-																					// F
-																					// S
-																					// order
+	private byte					days;
 	private Time					from;
 	private Time					to;
 
@@ -42,6 +29,12 @@ public class Timeslot
 	{
 		parse.trim();
 		String[] parts = parse.split(" ", 2);
+
+		days = 0;
+		from = new Time(0);
+		to = new Time(0);
+
+		if (parts.length != 2) return;
 
 		days = 0;
 		dayParse(parts[0]);
@@ -54,8 +47,7 @@ public class Timeslot
 		if ((this.days & timeslot.days) != 0)
 		{
 			// Check for intersection
-			return (this.from.getValue() < timeslot.to.getValue() && this.to
-					.getValue() > timeslot.from.getValue());
+			return (this.from.getValue() < timeslot.to.getValue() && this.to.getValue() > timeslot.from.getValue());
 		}
 
 		return false;
@@ -193,8 +185,7 @@ public class Timeslot
 				if (current == 'p')
 				{
 					if (to.getHour() < 12) to.setHour(to.getHour() + 12);
-					if (sameMeridiem && from.getHour() < 12)
-						from.setHour(from.getHour() + 12);
+					if (sameMeridiem && from.getHour() < 12) from.setHour(from.getHour() + 12);
 				}
 			}
 		}

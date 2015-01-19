@@ -29,17 +29,14 @@ public class OnlineClassAggregator implements ClassAggregator, FilenameFilter
 	{
 		File dir = new File("cache/");
 		aggregator = new LocalClassAggregator(dir.listFiles(this));
-		lastUpdate = Long.parseLong(Configuration.INSTANCE.getProperties()
-				.getProperty("lastCache", "0"));
-		time = Long.parseLong(Configuration.INSTANCE.getProperties()
-				.getProperty("cacheInvalidationTime", "3600"));
+		lastUpdate = Long.parseLong(Configuration.INSTANCE.getProperties().getProperty("lastCache", "0"));
+		time = Long.parseLong(Configuration.INSTANCE.getProperties().getProperty("cacheInvalidationTime", "3600"));
 	}
 
 	@Override
 	public ArrayList<Section> getCourseEnlistables(String course)
 	{
-		if ((Calendar.getInstance().getTimeInMillis() / 1000L) - lastUpdate > time)
-			update();
+		if ((Calendar.getInstance().getTimeInMillis() / 1000L) - lastUpdate > time) update();
 
 		String main = course.split(" ")[0];
 
@@ -56,9 +53,9 @@ public class OnlineClassAggregator implements ClassAggregator, FilenameFilter
 
 	public void update()
 	{
+		System.err.println("Updated! Connected to the internet!");
 		lastUpdate = Calendar.getInstance().getTimeInMillis() / 1000L;
-		Configuration.INSTANCE.getProperties().setProperty("lastCache",
-				String.valueOf(lastUpdate));
+		Configuration.INSTANCE.getProperties().setProperty("lastCache", String.valueOf(lastUpdate));
 
 		Set<String> files = aggregator.files.keySet();
 		for (String file : files)
@@ -71,14 +68,12 @@ public class OnlineClassAggregator implements ClassAggregator, FilenameFilter
 				e.printStackTrace();
 			}
 		}
-
-		System.err.println("Updated! Connected to the internet!");
 	}
 
 	private void getMain(String main) throws IOException
 	{
-		Connection.Response html = Jsoup.connect(
-				getBaseLocation(Calendar.getInstance()) + main).execute();
+		System.err.println("New main!" + main);
+		Connection.Response html = Jsoup.connect(getBaseLocation(Calendar.getInstance()) + main).execute();
 
 		if (html.statusCode() != 200) return;
 
@@ -134,7 +129,6 @@ public class OnlineClassAggregator implements ClassAggregator, FilenameFilter
 				semester = 2;
 				break;
 		}
-		return String.format("http://crs.upd.edu.ph/schedule/1%d%d/", year,
-				semester);
+		return String.format("http://crs.upd.edu.ph/schedule/1%d%d/", year, semester);
 	}
 }
