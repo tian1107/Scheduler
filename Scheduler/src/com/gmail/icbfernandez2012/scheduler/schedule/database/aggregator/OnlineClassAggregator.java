@@ -81,6 +81,7 @@ public class OnlineClassAggregator implements ClassAggregator, FilenameFilter
 		if (html.statusCode() != 200) return;
 
 		File toWrite = new File("cache/" + main + ".html");
+		toWrite.mkdirs();
 
 		FileWriter write = new FileWriter(toWrite);
 		write.write(html.body());
