@@ -57,8 +57,7 @@ public class ClassList
 	public Section getSection(String title)
 	{
 		String[] strings = title.split(" ");
-		if (strings.length < 3)
-			throw new IllegalArgumentException("Section of incorrect format");
+		if (strings.length < 3) throw new IllegalArgumentException("Section of incorrect format");
 		return getSection(strings[0] + " " + strings[1], strings[2]);
 	}
 
@@ -66,8 +65,7 @@ public class ClassList
 	{
 		for (Section s : sections)
 		{
-			if (s.getCourse().equalsIgnoreCase(subject)
-					&& s.getSection().equalsIgnoreCase(section)) return s;
+			if (s.getCourse().equalsIgnoreCase(subject) && s.getSection().equalsIgnoreCase(section)) return s;
 		}
 		return null;
 	}

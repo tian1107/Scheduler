@@ -67,10 +67,8 @@ public class FirstApplication
 
 	private void load()
 	{
-		String[] lastList = Configuration.INSTANCE.getProperties()
-				.getProperty("list", "").split(";");
-		String[] secList = Configuration.INSTANCE.getProperties()
-				.getProperty("selList", "").split(";");
+		String[] lastList = Configuration.INSTANCE.getProperties().getProperty("list", "").split(";");
+		String[] secList = Configuration.INSTANCE.getProperties().getProperty("selList", "").split(";");
 		setClassList(lastList);
 		list.setItems(secList);
 		while (list.indexOf("") > -1)
@@ -112,15 +110,14 @@ public class FirstApplication
 		clTableData.widthHint = 300;
 		clTableData.heightHint = 240;
 		clTable.setLayoutData(clTableData);
-		clTable.table
-				.addSelectionChangedListener(new ISelectionChangedListener() {
+		clTable.table.addSelectionChangedListener(new ISelectionChangedListener() {
 
-					@Override
-					public void selectionChanged(SelectionChangedEvent event)
-					{
-						updateConflictsLeft();
-					}
-				});
+			@Override
+			public void selectionChanged(SelectionChangedEvent event)
+			{
+				updateConflictsLeft();
+			}
+		});
 
 		Composite control = new Composite(selection, SWT.NONE);
 		control.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true));
@@ -160,12 +157,9 @@ public class FirstApplication
 				if (clTable.table.getCellSelection().length < 1) return;
 
 				Cell selected = clTable.table.getCellSelection()[0];
-				if (selected.row > -1
-						&& selected.row < clTable.table.getLayoutAdvisor()
-								.getRowCount())
+				if (selected.row > -1 && selected.row < clTable.table.getLayoutAdvisor().getRowCount())
 				{
-					String toAdd = (String) clTable.table.getContentAt(
-							selected.row,
+					String toAdd = (String) clTable.table.getContentAt(selected.row,
 							ClassListTable.Columns.Subject.getIndex())
 							+ " "
 							+ (String) clTable.table.getContentAt(selected.row,
@@ -263,8 +257,7 @@ public class FirstApplication
 		conflict.setLayoutData(conflictData);
 		conflict.setLayout(new FillLayout());
 
-		conflictLabel = new Text(conflict, SWT.MULTI | SWT.READ_ONLY
-				| SWT.V_SCROLL);
+		conflictLabel = new Text(conflict, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
 		conflictLabel.setText("\n\n\n\n\n");
 
 		Group conflict2 = new Group(calc, SWT.NONE);
@@ -272,8 +265,7 @@ public class FirstApplication
 		conflict2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		conflict2.setLayout(new FillLayout());
 
-		conflictLabel2 = new Text(conflict2, SWT.MULTI | SWT.READ_ONLY
-				| SWT.V_SCROLL);
+		conflictLabel2 = new Text(conflict2, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
 		conflictLabel2.setText("\n\n\n\n\n");
 
 		Group indiv = new Group(calc, SWT.NONE);
@@ -297,8 +289,7 @@ public class FirstApplication
 		listSelect = new ClassListSelect(shellList, SWT.NONE);
 
 		Button subjectSelect = new Button(calc, SWT.NONE);
-		subjectSelect.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				false));
+		subjectSelect.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		subjectSelect.setText("Edit Subject List");
 		subjectSelect.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -374,8 +365,7 @@ public class FirstApplication
 			secText += String.format("%s: %.3f%%\n", title, posteriori * 100);
 			if (subProb.containsKey(s.getCourse()))
 			{
-				subProb.put(s.getCourse(), subProb.get(s.getCourse())
-						+ posteriori);
+				subProb.put(s.getCourse(), subProb.get(s.getCourse()) + posteriori);
 			}
 			else
 			{
@@ -387,8 +377,7 @@ public class FirstApplication
 		String text = "";
 		for (String title : subjects)
 		{
-			text += String.format("%s: %.3f%%\n", title,
-					subProb.get(title) * 100);
+			text += String.format("%s: %.3f%%\n", title, subProb.get(title) * 100);
 			totalProb *= subProb.get(title);
 		}
 
@@ -407,18 +396,15 @@ public class FirstApplication
 		if (clTable.table.getCellSelection().length < 1) return;
 
 		Cell selected = clTable.table.getCellSelection()[0];
-		String subject = (String) clTable.table.getContentAt(selected.row,
-				ClassListTable.Columns.Subject.getIndex());
-		String section = (String) clTable.table.getContentAt(selected.row,
-				ClassListTable.Columns.Section.getIndex());
+		String subject = (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Subject.getIndex());
+		String section = (String) clTable.table.getContentAt(selected.row, ClassListTable.Columns.Section.getIndex());
 
 		String text = subject + " " + section + " conflicts with: \n";
 
 		Section s = cList.getSection(subject, section);
 		for (Section t : cList.getList())
 		{
-			if (t.getCourse().compareToIgnoreCase(s.getCourse()) != 0
-					&& t.doesConflictWith(s))
+			if (t.getCourse().compareToIgnoreCase(s.getCourse()) != 0 && t.doesConflictWith(s))
 				text += t.getCourse() + " " + t.getSection() + "\n";
 		}
 
@@ -432,13 +418,11 @@ public class FirstApplication
 		if (list.getSelectionCount() < 1) return;
 
 		Section s = cList.getSection(list.getItem(list.getSelectionIndex()));
-		String text = s.getCourse() + " " + s.getSection()
-				+ " conflicts with:\n";
+		String text = s.getCourse() + " " + s.getSection() + " conflicts with:\n";
 		for (String title : list.getItems())
 		{
 			Section t = cList.getSection(title);
-			if (t.getCourse().compareToIgnoreCase(s.getCourse()) != 0
-					&& t.doesConflictWith(s))
+			if (t.getCourse().compareToIgnoreCase(s.getCourse()) != 0 && t.doesConflictWith(s))
 				text += t.getCourse() + " " + t.getSection() + "\n";
 		}
 

@@ -23,9 +23,7 @@ public class AgileGridUtils
 
 			if (table.getLayoutAdvisor().isTopHeaderVisible())
 			{
-				width = table.getCellRendererProvider()
-						.getTopHeadRenderer(column)
-						.getOptimalWidth(gc, -1, column);
+				width = table.getCellRendererProvider().getTopHeadRenderer(column).getOptimalWidth(gc, -1, column);
 				if (width > optWidth)
 				{
 					optWidth = width;
@@ -34,9 +32,7 @@ public class AgileGridUtils
 
 			for (int i = 0; i < table.getLayoutAdvisor().getRowCount(); i++)
 			{
-				width = table.getCellRendererProvider()
-						.getCellRenderer(i, column)
-						.getOptimalWidth(gc, i, column);
+				width = table.getCellRendererProvider().getCellRenderer(i, column).getOptimalWidth(gc, i, column);
 				if (width > optWidth)
 				{
 					optWidth = width;

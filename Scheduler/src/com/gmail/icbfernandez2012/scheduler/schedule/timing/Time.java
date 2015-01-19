@@ -53,8 +53,8 @@ public class Time implements Comparable<Time>
 
 	public String to12HourString()
 	{
-		return String.format("%d:%02d%s", getHour() % 12 != 0 ? getHour() % 12
-				: 12, getMinute(), getHour() / 12 > 0 ? "pm" : "am");
+		return String.format("%d:%02d%s", getHour() % 12 != 0 ? getHour() % 12 : 12, getMinute(),
+				getHour() / 12 > 0 ? "pm" : "am");
 	}
 
 	@Override

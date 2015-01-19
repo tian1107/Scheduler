@@ -27,24 +27,21 @@ public class Section extends Enlistable
 	{
 		times = new ArrayList<Timeslot>();
 		id = Integer.parseInt(fromHtml.child(0).html());
-		String[] sectionFull = fromHtml.child(1).html()
-				.split("(?<!\\G\\S+)\\s");
+		String[] sectionFull = fromHtml.child(1).html().split("(?<!\\G\\S+)\\s");
 		course = sectionFull[0];
 		section = sectionFull[1];
 		units = Float.parseFloat(fromHtml.child(2).html());
 		dissolve = false;
 		overbook = false;
 
-		String[] timeStrings = fromHtml.child(3).html().split("<br>")[0]
-				.split(";");
+		String[] timeStrings = fromHtml.child(3).html().split("<br>")[0].split(";");
 
 		for (int i = 0; i < timeStrings.length; i++)
 		{
 			times.add(new Timeslot(timeStrings[i].trim()));
 		}
 
-		if (fromHtml.child(3).text().toLowerCase().contains("dissolve"))
-			dissolve = true;
+		if (fromHtml.child(3).text().toLowerCase().contains("dissolve")) dissolve = true;
 
 		String avString = fromHtml.child(5).select("strong").html();
 
@@ -60,8 +57,7 @@ public class Section extends Enlistable
 		if (avString.contains("DISSOLVED")) dissolve = true;
 
 		demand = 0;
-		if (!avString.contains("DISSOLVED"))
-			demand = Integer.parseInt(fromHtml.child(6).html());
+		if (!avString.contains("DISSOLVED")) demand = Integer.parseInt(fromHtml.child(6).html());
 	}
 
 	public void mergeSection(Section s)
@@ -116,9 +112,8 @@ public class Section extends Enlistable
 	public String toString()
 	{
 
-		String value = String.format("%d %s(%.1f): %s, (%d)(%d) %s %s\n", id,
-				course, units, section, available, demand,
-				overbook ? "Overbooked" : "", dissolve ? "Dissolved" : "");
+		String value = String.format("%d %s(%.1f): %s, (%d)(%d) %s %s\n", id, course, units, section, available,
+				demand, overbook ? "Overbooked" : "", dissolve ? "Dissolved" : "");
 
 		for (Timeslot time : times)
 		{

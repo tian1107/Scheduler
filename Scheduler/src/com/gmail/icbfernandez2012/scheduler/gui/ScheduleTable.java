@@ -22,8 +22,8 @@ import com.gmail.icbfernandez2012.scheduler.schedule.timing.Timeslot;
 
 public class ScheduleTable extends Composite
 {
-	protected static final String[]	titles	= { "Sunday", "Monday", "Tuesday",
-			"Wednesday", "Thursday", "Friday", "Saturday" };
+	protected static final String[]	titles	= { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+			"Saturday"						};
 
 	protected Collection<Section>	sections;
 	protected Set<Time>				times;
@@ -77,10 +77,8 @@ public class ScheduleTable extends Composite
 			last = current;
 		}
 
-		rowHeights = new ArrayList<Integer>(Collections.nCopies(
-				timeHeaders.size(), 0));
-		columnWidths = new ArrayList<Integer>(Collections.nCopies(
-				titles.length, 0));
+		rowHeights = new ArrayList<Integer>(Collections.nCopies(timeHeaders.size(), 0));
+		columnWidths = new ArrayList<Integer>(Collections.nCopies(titles.length, 0));
 		GC gc = new GC(aTable);
 
 		ArrayList<Time> aTimes = new ArrayList<Time>(times);
@@ -98,13 +96,11 @@ public class ScheduleTable extends Composite
 					// TableItem current = table.getItem(t);
 					for (int d = Timeslot.SUNDAY, q = 0; d >= Timeslot.SATURDAY; d /= 2, q++)
 					{
-						if (stringTable[q][t] == null)
-							stringTable[q][t] = new String();
+						if (stringTable[q][t] == null) stringTable[q][t] = new String();
 
 						if ((s.getDays() & d) != 0)
 						{
-							stringTable[q][t] += i.getCourse() + " "
-									+ i.getSection() + "\n";
+							stringTable[q][t] += i.getCourse() + " " + i.getSection() + "\n";
 							Point dim = gc.textExtent(stringTable[q][t]);
 							if (dim.x > columnWidths.get(q))
 							{
@@ -186,10 +182,8 @@ class ScheduleTableLayoutAdvisor extends DefaultLayoutAdvisor
 	@Override
 	public int getColumnWidth(int col)
 	{
-		int properWidth = (st.aTable.getClientArea().width - st.aTable
-				.getLayoutAdvisor().getLeftHeaderWidth());
-		if (st.aTable.getVerticalBar().isVisible())
-			properWidth -= st.aTable.getVerticalBar().getSize().x;
+		int properWidth = (st.aTable.getClientArea().width - st.aTable.getLayoutAdvisor().getLeftHeaderWidth());
+		if (st.aTable.getVerticalBar().isVisible()) properWidth -= st.aTable.getVerticalBar().getSize().x;
 
 		properWidth /= ScheduleTable.titles.length;
 		try

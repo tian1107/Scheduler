@@ -23,9 +23,8 @@ public class ClassListTable extends Composite
 
 	public enum Columns
 	{
-		Code(0, "Code"), Subject(1, "Subject"), Section(2, "Section"), Time(3,
-				"Time"), Remarks(4, "Remarks"), Probability(5, "Probability"), End(
-				6, "");
+		Code(0, "Code"), Subject(1, "Subject"), Section(2, "Section"), Time(3, "Time"), Remarks(4, "Remarks"), Probability(
+				5, "Probability"), End(6, "");
 
 		private int		index;
 		private String	title;
@@ -68,40 +67,33 @@ public class ClassListTable extends Composite
 		list = new ClassList(new String[] {});
 
 		setLayout(new FillLayout());
-		table = new AgileGrid(this, SWT.V_SCROLL | SWT.H_SCROLL
-				| SWTX.ROW_SELECTION | SWT.NO_REDRAW_RESIZE);
+		table = new AgileGrid(this, SWT.V_SCROLL | SWT.H_SCROLL | SWTX.ROW_SELECTION | SWT.NO_REDRAW_RESIZE);
 		table.setContentProvider(new ScalableColumnContentProvider());
 
 		ILayoutAdvisor layoutAdvisor = new ClassListTableLayoutAdvisor(this);
-		final ICompositorStrategy compositorStrategy = new DefaultCompositorStrategy(
-				layoutAdvisor);
+		final ICompositorStrategy compositorStrategy = new DefaultCompositorStrategy(layoutAdvisor);
 		layoutAdvisor.setCompositorStrategy(compositorStrategy);
 
 		table.setLayoutAdvisor(layoutAdvisor);
 		table.setCellRendererProvider(new SortableCellRendererProvider(table));
 
-		table.addMouseListener(new ColumnSortOnClick(table,
-				new ColumnSortComparator(table, Integer.MIN_VALUE,
-						ColumnSortComparator.SORT_NONE) {
+		table.addMouseListener(new ColumnSortOnClick(table, new ColumnSortComparator(table, Integer.MIN_VALUE,
+				ColumnSortComparator.SORT_NONE) {
 
-					@Override
-					public int doCompare(Object o1, Object o2, int row1,
-							int row2)
-					{
-						int col = getColumnToSortOn();
+			@Override
+			public int doCompare(Object o1, Object o2, int row1, int row2)
+			{
+				int col = getColumnToSortOn();
 
-						if (col == Columns.Code.getIndex())
-							return Integer.parseInt((String) o1)
-									- Integer.parseInt((String) o2);
-						else if (col == Columns.Subject.getIndex()
-								|| col == Columns.Section.getIndex())
-							return ((String) o1).compareTo((String) o2);
-						else if (col == Columns.Probability.getIndex())
-							return ((int) (Float.parseFloat((String) o1) - Float
-									.parseFloat((String) o2)));
-						return 0;
-					}
-				}));
+				if (col == Columns.Code.getIndex())
+					return Integer.parseInt((String) o1) - Integer.parseInt((String) o2);
+				else if (col == Columns.Subject.getIndex() || col == Columns.Section.getIndex())
+					return ((String) o1).compareTo((String) o2);
+				else if (col == Columns.Probability.getIndex())
+					return ((int) (Float.parseFloat((String) o1) - Float.parseFloat((String) o2)));
+				return 0;
+			}
+		}));
 	}
 
 	public void setList(ClassList list)
@@ -114,14 +106,10 @@ public class ClassListTable extends Composite
 		int i = 0;
 		for (Section section : list.getList())
 		{
-			provider.setContentAt(i, Columns.Code.getIndex(),
-					((Integer) section.getId()).toString());
-			provider.setContentAt(i, Columns.Subject.getIndex(),
-					section.getCourse());
-			provider.setContentAt(i, Columns.Section.getIndex(),
-					section.getSection());
-			provider.setContentAt(i, Columns.Time.getIndex(),
-					section.getTimeString());
+			provider.setContentAt(i, Columns.Code.getIndex(), ((Integer) section.getId()).toString());
+			provider.setContentAt(i, Columns.Subject.getIndex(), section.getCourse());
+			provider.setContentAt(i, Columns.Section.getIndex(), section.getSection());
+			provider.setContentAt(i, Columns.Time.getIndex(), section.getTimeString());
 			provider.setContentAt(i, Columns.Probability.getIndex(),
 					String.format("%.3f", section.getProbability() * 100));
 			i++;
