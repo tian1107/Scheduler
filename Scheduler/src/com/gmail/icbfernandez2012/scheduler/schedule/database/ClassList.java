@@ -11,6 +11,7 @@ public class ClassList
 {
 	private ArrayList<ClassAggregator>	aggregators;
 	protected ArrayList<Section>		sections;
+	protected String[]					shortNames;
 
 	public ClassList(String[] shortNames)
 	{
@@ -24,8 +25,18 @@ public class ClassList
 		setList(shortNames);
 	}
 
+	public void update()
+	{
+		for (ClassAggregator agg : aggregators)
+		{
+			agg.update();
+		}
+		setList(this.shortNames);
+	}
+
 	public void setList(String[] shortNames)
 	{
+		this.shortNames = shortNames;
 		sections.clear();
 
 		for (String subject : shortNames)

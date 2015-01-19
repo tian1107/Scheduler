@@ -51,6 +51,7 @@ public class OnlineClassAggregator implements ClassAggregator, FilenameFilter
 		return aggregator.getCourseEnlistables(course);
 	}
 
+	@Override
 	public void update()
 	{
 		System.err.println("Updated! Connected to the internet!");
@@ -131,6 +132,6 @@ public class OnlineClassAggregator implements ClassAggregator, FilenameFilter
 				semester = 2;
 				break;
 		}
-		return String.format("http://127.0.0.1:8000/schedule/1%d%d/", year, semester);
+		return String.format("http://crs.upd.edu.ph/schedule/1%d%d/", year, semester);
 	}
 }

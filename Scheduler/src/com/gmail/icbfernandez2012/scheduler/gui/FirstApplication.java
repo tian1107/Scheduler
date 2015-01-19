@@ -320,6 +320,21 @@ public class FirstApplication
 			}
 		});
 
+		Button update = new Button(calc, SWT.NONE);
+		update.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		update.setText("Refresh");
+		update.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				cList.update();
+				setClassList(listSelect.selected);
+				updateConflictsLeft();
+				updateConflictsRight();
+				updateSubjectProbabilities();
+			}
+		});
+
 		shellList.setDefaultButton(subjectSelect);
 		shellList.pack();
 
@@ -490,7 +505,7 @@ public class FirstApplication
 		shellList.open();
 		shellList.setMaximized(true);
 		shellSched.setVisible(false);
-		tryConnect();
+
 		while ((!shellSched.isDisposed() && shellSched.isVisible())
 				|| (!shellList.isDisposed() && shellList.isVisible()))
 		{

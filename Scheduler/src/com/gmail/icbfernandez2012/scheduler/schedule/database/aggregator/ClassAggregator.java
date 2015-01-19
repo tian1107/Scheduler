@@ -8,4 +8,6 @@ public interface ClassAggregator
 {
 
 	public ArrayList<Section> getCourseEnlistables(String course);
+
+	public void update();
 }
