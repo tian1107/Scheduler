@@ -1,6 +1,7 @@
 package com.gmail.icbfernandez2012.scheduler.gui;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import org.agilemore.agilegrid.Cell;
@@ -20,13 +21,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 
 import com.gmail.icbfernandez2012.scheduler.configuration.Configuration;
 import com.gmail.icbfernandez2012.scheduler.schedule.classes.Section;
 import com.gmail.icbfernandez2012.scheduler.schedule.database.ClassList;
+import com.gmail.icbfernandez2012.scheduler.schedule.database.aggregator.OnlineClassAggregator;
 
 /**
  * 
@@ -74,6 +78,21 @@ public class FirstApplication
 			list.remove("");
 		listSelect.selected = lastList;
 		updateSubjectProbabilities();
+	}
+
+	private void tryConnect()
+	{
+		// Try Connect
+		try
+		{
+			Jsoup.connect(OnlineClassAggregator.getBaseLocation(Calendar.getInstance())).execute();
+		} catch (Exception e1)
+		{
+			MessageBox box = new MessageBox(shellList, SWT.ICON_WARNING | SWT.OK);
+			box.setText("Warning");
+			box.setMessage("Cannot connect to server. Everything should still work, except updating independent probabilities and getting new sections and subjects.");
+			box.open();
+		}
 	}
 
 	private void createShellList()
@@ -471,6 +490,7 @@ public class FirstApplication
 		shellList.open();
 		shellList.setMaximized(true);
 		shellSched.setVisible(false);
+		tryConnect();
 		while ((!shellSched.isDisposed() && shellSched.isVisible())
 				|| (!shellList.isDisposed() && shellList.isVisible()))
 		{
