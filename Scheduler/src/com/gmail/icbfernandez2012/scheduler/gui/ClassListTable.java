@@ -89,6 +89,11 @@ public class ClassListTable extends Composite
 					return Integer.parseInt((String) o1) - Integer.parseInt((String) o2);
 				else if (col == Columns.Subject.getIndex() || col == Columns.Section.getIndex())
 					return ((String) o1).compareTo((String) o2);
+				else if (col == Columns.Time.getIndex())
+				{
+					// TODO this
+					return ((String) o1).compareTo((String) o2);
+				}
 				else if (col == Columns.Probability.getIndex())
 					return ((int) (Float.parseFloat((String) o1) - Float.parseFloat((String) o2)));
 				return 0;
