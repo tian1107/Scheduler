@@ -18,7 +18,11 @@ public class Configuration
 	public Configuration()
 	{
 		props = new Properties();
+		reload();
+	}
 
+	public void reload()
+	{
 		File file = new File("./cache/config.ini");
 		InputStream input = null;
 

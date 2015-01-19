@@ -15,11 +15,13 @@ import com.gmail.icbfernandez2012.scheduler.schedule.classes.Section;
 
 public class LocalClassAggregator implements ClassAggregator
 {
-	private HashMap<String, Document>	files;
+	protected HashMap<String, Document>	files;
 
 	public LocalClassAggregator(String[] files)
 	{
 		this.files = new HashMap<String, Document>();
+
+		if (files == null) return;
 
 		for (String file : files)
 		{
@@ -27,14 +29,31 @@ public class LocalClassAggregator implements ClassAggregator
 		}
 	}
 
+	public LocalClassAggregator(File[] files)
+	{
+		this.files = new HashMap<String, Document>();
+
+		if (files == null) return;
+
+		for (File file : files)
+		{
+			addFile(file);
+		}
+	}
+
 	public void addFile(String file)
+	{
+		addFile(new File(file));
+	}
+
+	public void addFile(File file)
 	{
 		try
 		{
-			this.files.put(file, Jsoup.parse(new File(file), "utf-8", ""));
+			this.files.put(file.getName(), Jsoup.parse(file, "utf-8", ""));
 		} catch (IOException e)
 		{
-			System.err.println("Error on file: " + file);
+			System.err.println("Error on file: " + file.getName());
 		}
 	}
 
@@ -48,7 +67,7 @@ public class LocalClassAggregator implements ClassAggregator
 	{
 		ArrayList<Section> sections = new ArrayList<Section>();
 		boolean needsMerge = false;
-		
+
 		for (Document x : files.values())
 		{
 			Elements classes = x.select("#tbl_schedule tbody tr");

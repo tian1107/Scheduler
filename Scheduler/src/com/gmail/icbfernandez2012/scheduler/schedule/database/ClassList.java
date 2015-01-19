@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import com.gmail.icbfernandez2012.scheduler.schedule.classes.Section;
 import com.gmail.icbfernandez2012.scheduler.schedule.database.aggregator.ClassAggregator;
-import com.gmail.icbfernandez2012.scheduler.schedule.database.aggregator.LocalClassAggregator;
+import com.gmail.icbfernandez2012.scheduler.schedule.database.aggregator.OnlineClassAggregator;
 
 public class ClassList
 {
@@ -15,8 +15,9 @@ public class ClassList
 	public ClassList(String[] shortNames)
 	{
 		aggregators = new ArrayList<ClassAggregator>();
-		aggregators.add(new LocalClassAggregator(new String[] {
-				"Z:/scheduler/test/eee.html", "Z:/scheduler/test/coe.html" }));
+		// aggregators.add(new LocalClassAggregator(
+		// new String[] { "cache/coe.html" }));
+		aggregators.add(new OnlineClassAggregator());
 
 		sections = new ArrayList<Section>();
 
@@ -74,8 +75,7 @@ public class ClassList
 	// Testing
 	public static void main(String[] args) throws Exception
 	{
-		ClassList list = new ClassList(new String[] { "EEE 35", "EEE 23",
-				"eee 52" });
+		ClassList list = new ClassList(new String[] { "CoE 141" });
 		list.removeUseless();
 
 		for (Section finalSections : list.sections)
