@@ -2,7 +2,6 @@ package com.gmail.icbfernandez2012.scheduler.gui;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import org.agilemore.agilegrid.Cell;
 import org.agilemore.agilegrid.ISelectionChangedListener;
@@ -296,6 +295,9 @@ public class FirstApplication
 			public void widgetSelected(SelectionEvent e)
 			{
 				setClassList(listSelect.open());
+				updateSubjectProbabilities();
+				updateConflictsRight();
+				updateConflictsLeft();
 			}
 		});
 
@@ -344,17 +346,22 @@ public class FirstApplication
 		String secText = "";
 
 		HashMap<String, Float> subProb = new HashMap<String, Float>();
-		HashSet<String> subjects = new HashSet<String>();
 		for (int index = 0; index < list.getItemCount(); index++)
 		{
 			String title = list.getItem(index);
 			Section s = cList.getSection(title);
-			subjects.add(s.getCourse());
+			if (s == null)
+			{
+				secText += title + ": Err\n";
+				continue;
+			}
+
 			float posteriori = 1.0f;
 			for (int c = 0; c < index; c++)
 			{
 				String cTitle = list.getItem(c);
 				Section con = cList.getSection(cTitle);
+				if (con == null) continue;
 
 				if (con.doesConflictWith(s))
 				{
@@ -375,7 +382,7 @@ public class FirstApplication
 
 		float totalProb = 1.0f;
 		String text = "";
-		for (String title : subjects)
+		for (String title : subProb.keySet())
 		{
 			text += String.format("%s: %.3f%%\n", title, subProb.get(title) * 100);
 			totalProb *= subProb.get(title);
@@ -417,13 +424,21 @@ public class FirstApplication
 	{
 		if (list.getSelectionCount() < 1) return;
 
+		String text = "";
+
 		Section s = cList.getSection(list.getItem(list.getSelectionIndex()));
-		String text = s.getCourse() + " " + s.getSection() + " conflicts with:\n";
-		for (String title : list.getItems())
+		if (s == null)
+			text = "Error: section not found. Make sure it is on the section list on the left.";
+		else
 		{
-			Section t = cList.getSection(title);
-			if (t.getCourse().compareToIgnoreCase(s.getCourse()) != 0 && t.doesConflictWith(s))
-				text += t.getCourse() + " " + t.getSection() + "\n";
+			text = s.getCourse() + " " + s.getSection() + " conflicts with:\n";
+			for (String title : list.getItems())
+			{
+				Section t = cList.getSection(title);
+				if (t == null) continue;
+				if (t.getCourse().compareToIgnoreCase(s.getCourse()) != 0 && t.doesConflictWith(s))
+					text += t.getCourse() + " " + t.getSection() + "\n";
+			}
 		}
 
 		fillNewLines(text, 5);
