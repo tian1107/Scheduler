@@ -22,6 +22,7 @@ public class Section extends Enlistable
 	private int					available;
 	private boolean				overbook;
 	private boolean				dissolve;
+	private int					subBlocks;
 
 	public Section(Element fromHtml)
 	{
@@ -34,6 +35,11 @@ public class Section extends Enlistable
 		dissolve = false;
 		overbook = false;
 
+		subBlocks = Integer.parseInt(fromHtml.child(0).attr("rowspan"));
+
+		Element noBlock = fromHtml;
+		if (subBlocks > 1) noBlock = fromHtml.parent().child(fromHtml.elementSiblingIndex() + subBlocks - 1);
+
 		String[] timeStrings = fromHtml.child(3).html().split("<br>")[0].split(";");
 
 		for (int i = 0; i < timeStrings.length; i++)
@@ -43,7 +49,13 @@ public class Section extends Enlistable
 
 		if (fromHtml.child(3).text().toLowerCase().contains("dissolve")) dissolve = true;
 
-		String avString = fromHtml.child(5).select("strong").html();
+		String avString = "";
+		if (subBlocks > 1)
+		{
+			avString = noBlock.child(1).select("strong").html();
+		}
+		else
+			avString = fromHtml.child(5).select("strong").html();
 
 		try
 		{
@@ -57,7 +69,13 @@ public class Section extends Enlistable
 		if (avString.contains("DISSOLVED")) dissolve = true;
 
 		demand = 0;
-		if (!avString.contains("DISSOLVED")) demand = Integer.parseInt(fromHtml.child(6).html());
+		if (!avString.contains("DISSOLVED"))
+		{
+			if (subBlocks > 1)
+				demand = Integer.parseInt(noBlock.child(2).html());
+			else
+				demand = Integer.parseInt(fromHtml.child(6).html());
+		}
 	}
 
 	public void mergeSection(Section s)
