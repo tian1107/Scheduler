@@ -150,8 +150,8 @@ public class Timeslot
 			}
 			else if (state == 2)
 			{
-				if (current == 'p' && from.getHour() < 12)
-					from.setHour(from.getHour() + 12);
+				if (current == 'p' && from.getHour() <= 12)
+					from.setHour((from.getHour() + 12) % 24);
 				else if (current == '-') state = 10;
 			}
 			else if (state == 10) // final time's hour
@@ -184,8 +184,8 @@ public class Timeslot
 			{
 				if (current == 'p')
 				{
-					if (to.getHour() < 12) to.setHour(to.getHour() + 12);
-					if (sameMeridiem && from.getHour() < 12) from.setHour(from.getHour() + 12);
+					if (to.getHour() < 12) to.setHour((to.getHour() + 12) % 24);
+					if (sameMeridiem && from.getHour() < 12) from.setHour((from.getHour() + 12) % 24);
 				}
 			}
 		}
