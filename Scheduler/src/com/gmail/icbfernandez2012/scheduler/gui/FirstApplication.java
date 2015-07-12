@@ -322,6 +322,7 @@ public class FirstApplication
 
 		Button update = new Button(calc, SWT.NONE);
 		update.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		update.setEnabled(false);
 		update.setText("Refresh");
 		update.addSelectionListener(new SelectionAdapter() {
 			@Override

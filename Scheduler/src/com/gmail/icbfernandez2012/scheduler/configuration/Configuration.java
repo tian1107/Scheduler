@@ -36,6 +36,7 @@ public class Configuration
 		{
 			input = new FileInputStream(file);
 			props.load(input);
+			props.setProperty("cacheInvalidationTime", "36000");
 		} catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
@@ -59,7 +60,7 @@ public class Configuration
 		// props.setProperty("lastCache",
 		// String.valueOf(System.currentTimeMillis() / 1000L));
 		props.setProperty("lastCache", "0");
-		props.setProperty("cacheInvalidationTime", "3600");
+		props.setProperty("cacheInvalidationTime", "36000");
 		props.setProperty("list", "");
 		props.setProperty("selList", "");
 	}
