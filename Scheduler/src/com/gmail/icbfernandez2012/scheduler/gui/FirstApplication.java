@@ -1,5 +1,6 @@
 package com.gmail.icbfernandez2012.scheduler.gui;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -380,6 +381,12 @@ public class FirstApplication
 	{
 		String secText = "";
 
+		ArrayList<Section> selSects = new ArrayList<Section>();
+		for (int x = 0; x < list.getItemCount(); x++)
+		{
+			selSects.add(cList.getSection(list.getItem(x)));
+		}
+
 		HashMap<String, Float> subProb = new HashMap<String, Float>();
 		for (int index = 0; index < list.getItemCount(); index++)
 		{
@@ -391,21 +398,8 @@ public class FirstApplication
 				continue;
 			}
 
-			float posteriori = 1.0f;
-			for (int c = 0; c < index; c++)
-			{
-				String cTitle = list.getItem(c);
-				Section con = cList.getSection(cTitle);
-				if (con == null) continue;
+			float posteriori = Section.getPosteriori(selSects, index);
 
-				// TODO: when this subject conflicts with subjects that have
-				// conflicts that does not conflict with this subject
-				if (con.doesConflictWith(s))
-				{
-					posteriori *= 1 - con.getProbability();
-				}
-			}
-			posteriori *= s.getProbability();
 			secText += String.format("%s: %.3f%%\n", title, posteriori * 100);
 			if (subProb.containsKey(s.getCourse()))
 			{

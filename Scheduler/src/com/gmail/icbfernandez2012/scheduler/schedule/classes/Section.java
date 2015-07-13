@@ -196,4 +196,26 @@ public class Section extends Enlistable
 	{
 		return new String[] { course };
 	}
+
+	public static float getPosteriori(ArrayList<Section> subjects, int index)
+	{
+		Section s = subjects.get(index);
+		float probability = s.getProbability();
+
+		ArrayList<Section> remaining = new ArrayList<Section>(subjects);
+		for (int i = 0; i < index; i++)
+		{
+			Section current = subjects.get(i);
+
+			if (current == null) continue;
+
+			if (current.doesConflictWith(s))
+			{
+				probability *= 1 - getPosteriori(remaining, remaining.indexOf(current));
+				remaining.remove(current);
+			}
+		}
+
+		return probability;
+	}
 }
