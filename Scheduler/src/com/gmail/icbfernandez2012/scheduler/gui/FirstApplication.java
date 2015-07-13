@@ -398,6 +398,8 @@ public class FirstApplication
 				Section con = cList.getSection(cTitle);
 				if (con == null) continue;
 
+				// TODO: when this subject conflicts with subjects that have
+				// conflicts that does not conflict with this subject
 				if (con.doesConflictWith(s))
 				{
 					posteriori *= 1 - con.getProbability();
